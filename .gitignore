@@ -1,0 +1,8 @@
+bin
+lib
+.idea
+.clang-format
+*.pro.user
+cmake-build-*
+/legacy
+logFormatVariant.txt
