@@ -3,46 +3,79 @@
 //
 
 #include "LogMsg.hpp"
+#include "ConfigLoader.hpp"
 #include <log4cpp/Category.hh>
 #include <log4cpp/FileAppender.hh>
+#include <log4cpp/PatternLayout.hh>
 
-#include <QDebug>
+#ifndef NDEBUG
+  #include "log4cpp/OstreamAppender.hh"
+  #include <QDebug>
+#endif
 
 constexpr LogMsg::LogLvlImplicit::operator std::string_view() const
 {
   switch (lvl) {
-  case debug: return TO_LITERAL(debug);
-  case info: return TO_LITERAL(info);
-  case warning: return TO_LITERAL(warning);
-  case error: return TO_LITERAL(error);
+  case LogMsgState::Debug: return TO_LITERAL(Debug);
+  case LogMsgState::Info: return TO_LITERAL(Info);
+  case LogMsgState::Warning: return TO_LITERAL(Warning);
+  case LogMsgState::Error: return TO_LITERAL(Error);
   default: assert(false);
   }
 }
 
 LogMsg::~LogMsg()
 {
-  qDebug() << "test: " << _file.data() << _func.data()
-           << _lvl.operator std::string_view().data() << messages;
+  assert(config);
+  if (messages.empty())
+    return;
+
+  /// Collapsed in one string
+  for (auto it= std::next(messages.begin()); it < messages.end(); ++it) {
+    messages.front()+= ';' + std::move(*it);
+  }
+
+  libRoot().info(
+      "%s {%s: %u} [%s]: %s",
+      _file.data(),
+      _func.data(),
+      _line,
+      _lvl.operator std::string_view().data(),
+      messages.front().c_str());
 }
-LogMsg::LogMsg(std::string_view file, std::string_view func, LogLvl lvl)
+LogMsg::LogMsg(
+    std::string_view file,
+    std::string_view func,
+    size_t line,
+    LogMsgState::LogLvl lvl)
     : _lvl{ lvl }
     , _file{ file }
     , _func{ func }
-{}
-void LogMsg::initFromConfigLoader(const ConfigLoader &cfg)
+    , _line{ line }
 {
-#ifndef NDEBUG
-  if (std::exchange(_isInitConfig, true))
-    assert(false && "reinitialization");
-#endif
+  if (!config) {
+    initFromConfigLoader();
+  }
+}
+void LogMsg::initFromConfigLoader()
+{
+  assert(!config && "reinitialization");
 
-  libRoot().addAppender(new log4cpp::FileAppender("default", "logs.ini"));
+  ConfigLoader<LogMsg> const confLoad{};
+  config.emplace(confLoad.state());
+
+  using namespace log4cpp;
+  auto const apd=
+            new log4cpp::FileAppender("default",
+            confLoad.fileName())
+//      new log4cpp::OstreamAppender("console", &std::cout)
+            ;
+  auto const layout= new PatternLayout;
+  layout->setConversionPattern("%d{%H:%M} %m%n");
+  apd->setLayout(layout);
+  libRoot().addAppender(apd);
 }
 log4cpp::Category &LogMsg::libRoot()
 {
-#ifndef NDEBUG
-  if (!_isInitConfig)
-    assert(false && "libLogRoot entity not initialize");
-#endif
   return log4cpp::Category::getRoot();
 }

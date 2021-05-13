@@ -4,13 +4,15 @@
 
 #ifndef VEDISOFTINTERNSHIP_DEFFWD_HPP
 #define VEDISOFTINTERNSHIP_DEFFWD_HPP
+#include <string>
 
 #ifdef TO_LITERAL
   #error "^^ redefinition"
 #endif
 #define TO_LITERAL(x) #x
 
-class ConfigLoader;
+class LogMsg;
+struct LogMsgState;
 namespace log4cpp
 {
 class Category;
