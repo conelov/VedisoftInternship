@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.16)
 project(VedisoftInternship)
 set(CMAKE_CXX_STANDARD 20)
 set(QT_VERSION 5)
@@ -8,7 +8,8 @@ set(${PROJECT_NAME}_REQUIRED_LIBS_QUALIFIED
         "${PROJECT_SOURCE_DIR}/3rdparty/logger/lib/liblog4cpp.so"
         )
 set(${PROJECT_NAME}_INCLUDE_DIR
-        ${PROJECT_SOURCE_DIR}
+        "${PROJECT_SOURCE_DIR}"
+        "${PROJECT_SOURCE_DIR}/3rdparty/logger/include/"
         )
 set(${PROJECT_NAME}_files
         qml.qrc
@@ -17,7 +18,8 @@ set(${PROJECT_NAME}_files
         src/Deffwd.hpp
         src/configLoader/ConfigLoader.cpp src/configLoader/ConfigLoader.hpp
         src/configLoader/ConfigCache.hpp src/configLoader/ConfigCache.cpp
-        )
+        src/utils.hpp
+        src/MarshalJson.cpp src/MarshalJson.hpp)
 
 find_package(Threads REQUIRED)
 
@@ -48,7 +50,7 @@ target_compile_definitions(${PROJECT_NAME}_main
         PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 
 add_executable(${PROJECT_NAME}_touchTests
-        touchTests/main.cpp
+        touchTests/MarshalJson.cpp
         ${${PROJECT_NAME}_files}
         )
 target_link_libraries(${PROJECT_NAME}_touchTests
@@ -60,6 +62,24 @@ target_include_directories(${PROJECT_NAME}_touchTests PUBLIC
         )
 set_target_properties(${PROJECT_NAME}_touchTests PROPERTIES
         AUTOMOC ON
-#        AUTORCC ON
+        #        AUTORCC ON
+        INCLUDE_CURRENT_DIR ON
+        )
+
+add_executable(${PROJECT_NAME}_tests
+        test/MarshalJson.cpp
+        ${${PROJECT_NAME}_files}
+        )
+target_link_libraries(${PROJECT_NAME}_tests
+        PUBLIC
+        ${${PROJECT_NAME}_REQUIRED_LIBS_QUALIFIED}
+        gtest_main gtest
+        )
+target_include_directories(${PROJECT_NAME}_tests PUBLIC
+        ${${PROJECT_NAME}_INCLUDE_DIR}
+        )
+set_target_properties(${PROJECT_NAME}_tests PROPERTIES
+        AUTOMOC ON
+        #        AUTORCC ON
         INCLUDE_CURRENT_DIR ON
         )
