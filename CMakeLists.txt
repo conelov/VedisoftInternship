@@ -8,13 +8,16 @@ set(${PROJECT_NAME}_REQUIRED_LIBS_QUALIFIED
         "${PROJECT_SOURCE_DIR}/3rdparty/logger/lib/liblog4cpp.so"
         )
 set(${PROJECT_NAME}_INCLUDE_DIR
-        impl
-        3rdparty/logger/include/
+        ${PROJECT_SOURCE_DIR}
         )
 set(${PROJECT_NAME}_files
         qml.qrc
-        impl/LogMsg.cpp impl/LogMsg.hpp
-        impl/Deffwd.hpp impl/ConfigLoader.cpp impl/ConfigLoader.hpp impl/LogMsgState.hpp)
+        src/logger/Logger.cpp src/logger/Logger.hpp
+        src/logger/LoggerConfig.hpp
+        src/Deffwd.hpp
+        src/configLoader/ConfigLoader.cpp src/configLoader/ConfigLoader.hpp
+        src/configLoader/ConfigCache.hpp src/configLoader/ConfigCache.cpp
+        )
 
 find_package(Threads REQUIRED)
 

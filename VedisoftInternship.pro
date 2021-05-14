@@ -14,9 +14,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        impl/ConfigLoader.cpp \
-        impl/LogMsg.cpp \
-        main.cpp
+        src/configLoader/ConfigCache.cpp \
+        src/configLoader/ConfigLoader.cpp \
+        src/logger/Logger.cpp \
+        touchTests/main.cpp
+
+HEADERS += \
+    src/Deffwd.hpp \
+    src/configLoader/ConfigCache.hpp \
+    src/configLoader/ConfigLoader.hpp \
+    src/logger/Logger.hpp \
+    src/logger/LoggerConfig.hpp
 
 RESOURCES += qml.qrc
 
@@ -30,12 +38,6 @@ QML_DESIGNER_IMPORT_PATH =
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-
-HEADERS += \
-    impl/ConfigLoader.hpp \
-    impl/Deffwd.hpp \
-    impl/LogMsg.hpp \
-    impl/LogMsgState.hpp
 
 unix:!macx: LIBS += -L$$PWD/3rdparty/logger/lib/ -llog4cpp
 
