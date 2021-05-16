@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
   {
     QByteArray data;
     {
-      QFile file("./jsonSrc.json");
+      QFile file("../testingProj/fileInput/jsonSrc_error.json");
       assert(file.open(QIODevice::ReadOnly | QIODevice::Text));
       data= file.readAll();
     }

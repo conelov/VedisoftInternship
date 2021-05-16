@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(VedisoftInternship)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 set(QT_VERSION 5)
 
 set(${PROJECT_NAME}_REQUIRED_LIBS_QUALIFIED
@@ -50,7 +50,7 @@ target_compile_definitions(${PROJECT_NAME}_main
         PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 
 add_executable(${PROJECT_NAME}_touchTests
-        touchTests/MarshalJson.cpp
+        testsTouch/MarshalJson.cpp
         ${${PROJECT_NAME}_files}
         )
 target_link_libraries(${PROJECT_NAME}_touchTests
@@ -67,13 +67,13 @@ set_target_properties(${PROJECT_NAME}_touchTests PROPERTIES
         )
 
 add_executable(${PROJECT_NAME}_tests
-        test/MarshalJson.cpp
+        testingProj/test.cpp
         ${${PROJECT_NAME}_files}
         )
 target_link_libraries(${PROJECT_NAME}_tests
         PUBLIC
         ${${PROJECT_NAME}_REQUIRED_LIBS_QUALIFIED}
-        gtest_main gtest
+        gtest_main
         )
 target_include_directories(${PROJECT_NAME}_tests PUBLIC
         ${${PROJECT_NAME}_INCLUDE_DIR}
@@ -82,4 +82,5 @@ set_target_properties(${PROJECT_NAME}_tests PROPERTIES
         AUTOMOC ON
         #        AUTORCC ON
         INCLUDE_CURRENT_DIR ON
+        RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/testingProj/bin
         )

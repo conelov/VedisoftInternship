@@ -4,7 +4,7 @@
 
 #ifndef VEDISOFTINTERNSHIP_UTILS_HPP
 #define VEDISOFTINTERNSHIP_UTILS_HPP
-#include "src/Deffwd.hpp"
+#include "../src/Deffwd.hpp"
 #include <QPixmap>
 
 namespace qml

@@ -1,9 +1,6 @@
-//
-// Created by dym on 15.05.2021.
-//
-#include "src/MarshalJson.hpp"
-#include "src/utils.hpp"
-#include <gtest/gtest.h>
+#include<gtest/gtest.h>
+#include "../src/MarshalJson.hpp"
+#include "../src/utils.hpp"
 
 #ifndef NDEBUG
   #include <QDebug>
@@ -16,7 +13,7 @@ static QJsonDocument const jsonDocumentSource= []
   QJsonDocument jsonDocument;
   QByteArray data;
   {
-    QFile file("./jsonSrc.json");
+    QFile file("../fileInput/jsonSrc.json");
     assert(file.open(QIODevice::ReadOnly | QIODevice::Text));
     data= file.readAll();
   }
