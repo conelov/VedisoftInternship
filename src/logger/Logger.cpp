@@ -3,7 +3,8 @@
 //
 
 #include "Logger.hpp"
-#include "../configLoader/ConfigLoader.hpp"
+#include "src/configLoader/ConfigLoader.hpp"
+#include "src/utils.hpp"
 #include <log4cpp/Category.hh>
 #include <log4cpp/FileAppender.hh>
 #include <log4cpp/PatternLayout.hh>
@@ -25,7 +26,7 @@ void Logger::loadState(const LoggerConfig &state)
 }
 log4cpp::Category &Logger::libRoot()
 {
-  if (std::exchange(_initOnce, false)) {
+  if (exchange(_initOnce, false)) {
     initLib();
   }
   return log4cpp::Category::getRoot();

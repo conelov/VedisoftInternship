@@ -15,11 +15,11 @@ set(${PROJECT_NAME}_files
         qml.qrc
         src/logger/Logger.cpp src/logger/Logger.hpp
         src/logger/LoggerConfig.hpp
-        src/Deffwd.hpp
+        src/deffwd.hpp
         src/configLoader/ConfigLoader.cpp src/configLoader/ConfigLoader.hpp
         src/configLoader/ConfigCache.hpp src/configLoader/ConfigCache.cpp
-        src/utils.hpp
-        src/MarshalJson.cpp src/MarshalJson.hpp)
+        src/entities/aggregates.hpp
+        src/MarshalJson.cpp src/MarshalJson.hpp src/utils.hpp)
 
 find_package(Threads REQUIRED)
 

@@ -4,3 +4,4 @@ bin
 *.pro.user
 cmake-build-*
 build-*
+build

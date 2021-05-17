@@ -1,6 +1,6 @@
-#include<gtest/gtest.h>
 #include "../src/MarshalJson.hpp"
-#include "../src/utils.hpp"
+#include "src/entities/aggregates.hpp"
+#include <gtest/gtest.h>
 
 #ifndef NDEBUG
   #include <QDebug>

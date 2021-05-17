@@ -3,7 +3,7 @@
 //
 
 #include "ConfigLoader.hpp"
-#include "../logger/LoggerConfig.hpp"
+#include "src/logger/LoggerConfig.hpp"
 #include "ConfigCache.hpp"
 #include <QSettings>
 

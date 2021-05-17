@@ -2,7 +2,7 @@
 // Created by dym on 14.05.2021.
 //
 #include "src/MarshalJson.hpp"
-#include "src/utils.hpp"
+#include "src/entities/aggregates.hpp"
 #include <QCoreApplication>
 #include <QDataStream>
 #include <QFile>

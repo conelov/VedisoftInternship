@@ -13,21 +13,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-SOURCES += \
-        src/configLoader/ConfigCache.cpp \
-        src/configLoader/ConfigLoader.cpp \
-        src/logger/Logger.cpp \
-        touchTests/main.cpp
-
-HEADERS += \
-    src/Deffwd.hpp \
-    src/configLoader/ConfigCache.hpp \
-    src/configLoader/ConfigLoader.hpp \
-    src/logger/Logger.hpp \
-    src/logger/LoggerConfig.hpp
-
-RESOURCES += qml.qrc
-
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
 
@@ -45,3 +30,22 @@ INCLUDEPATH += $$PWD/3rdparty/logger/include
 DEPENDPATH += $$PWD/3rdparty/logger/include
 
 DESTDIR = bin
+
+HEADERS += \
+    src/MarshalJson.hpp \
+    src/configLoader/ConfigCache.hpp \
+    src/configLoader/ConfigLoader.hpp \
+    src/deffwd.hpp \
+    src/entities/aggregates.hpp \
+    src/logger/Logger.hpp \
+    src/logger/LoggerConfig.hpp \
+    src/utils.hpp
+
+SOURCES += \
+    main.cpp \
+    src/MarshalJson.cpp \
+    src/configLoader/ConfigCache.cpp \
+    src/configLoader/ConfigLoader.cpp \
+    src/logger/Logger.cpp
+
+RESOURCES += qml.qrc

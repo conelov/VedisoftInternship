@@ -3,7 +3,7 @@
 //
 
 #include "MarshalJson.hpp"
-#include "../src/utils.hpp"
+#include "src/entities/aggregates.hpp"
 
 #if defined(MARSHALJSON_DESERIALIZE_CHECK) ||                                  \
     defined(MARSHALJSON_DESERIALIZE_VALUE)
@@ -12,6 +12,7 @@
 
 #define MARSHALJSON_DESERIALIZE_CHECK
 
+/// TODO: remove throw exception
 #ifdef MARSHALJSON_DESERIALIZE_CHECK
   #define MARSHALJSON_DESERIALIZE_VALUE(source, key)                           \
     [&source, &key]                                                            \
