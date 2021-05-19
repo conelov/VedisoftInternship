@@ -11,13 +11,47 @@ Window {
     height: 480
     title: qsTr("Card test")
 
-    readonly property int providerTextPointSize: 16
-    readonly property int marginBase: 10
-    readonly property int cardHeight: 185
-    readonly property int cardWidth: 200
+    property int providerTextPointSize: 16
+    property int marginBase: 10
+    property int cardHeight: 185
+    property int cardWidth: 200
+
+    ListModel {
+        id: providerModel
+
+        ListElement {
+            name: "Apple.com"
+            attributes: [
+                ListElement { credits: "$1,000.99"; coin: "10"},
+                ListElement { credits: "$9,999.01"; coin: "0"}
+            ]
+        }
+        ListElement {
+            name: "iTunes"
+            attributes: [
+                ListElement { credits: "$1,000,000.00"; coin: "20,000"},
+                ListElement { credits: "$0.00"; coin: "0"},
+                ListElement { credits: "$1,000.99"; coin: "10"}
+            ]
+        }
+        ListElement {
+            name: "Amazon.com"
+            attributes: [
+                ListElement { credits: "$500,500.00"; coin: "100,999"}
+            ]
+        }
+    }
+
+    ListView {
+        anchors.fill: parent
+        ScrollBar.vertical: ScrollBar{}
+
+        model: providerModel
+        delegate: lvVerticalListDelegate
+    }
 
     Component {
-        id: lvVerticalDelegate
+        id: lvVerticalListDelegate
         Item{
             anchors.left: parent.left
             anchors.right: parent.right
@@ -26,10 +60,9 @@ Window {
             Text{
                 id: providerText
                 font.pointSize: providerTextPointSize
-                text: name
+                text: model.name
             }
             ListView{
-                id: lvHorizontal
                 orientation: ListView.Horizontal
                 anchors.top: providerText.bottom
                 anchors.topMargin: marginBase
@@ -55,12 +88,11 @@ Window {
                         id: card
                         anchors.fill: parent
 
-                        credits: model.credits
-                        coin: model.coin
+                        credit: model.credits
+                        point: model.coin
                     }
 
                     DropShadow {
-                        id: rectShadow
                         anchors.fill: source
                         cached: true
                         horizontalOffset: 3
@@ -73,57 +105,6 @@ Window {
                     }
                 }
             }
-        }
-
-        //        Item {
-        //            width: 200; height: 150
-        //            Text { id: nameField; text: name }
-        //            Text { text: '$' + cost; anchors.left: nameField.right }
-        //            Row {
-        //                anchors.top: nameField.bottom
-        //                spacing: 5
-        //                Text { text: "Attributes:" }
-        //                Repeater {
-        //                    model: attributes
-        //                    Text { text: description }
-        //                }
-        //            }
-        //        }
-    }
-
-    ListView {
-        id: lvVertical
-        anchors.fill: parent
-        ScrollBar.vertical: ScrollBar{
-        }
-
-        model: providerModel
-        delegate: lvVerticalDelegate
-    }
-
-    ListModel {
-        id: providerModel
-
-        ListElement {
-            name: "Apple.com"
-            attributes: [
-                ListElement { credits: "$1,000.99"; coin: "10"},
-                ListElement { credits: "$9,999.01"; coin: "0"}
-            ]
-        }
-        ListElement {
-            name: "iTunes"
-            attributes: [
-                ListElement { credits: "$1,000,000.00"; coin: "20,000"},
-                ListElement { credits: "$0.00"; coin: "0"},
-                ListElement { credits: "$1,000.99"; coin: "10"}
-            ]
-        }
-        ListElement {
-            name: "Amazon.com"
-            attributes: [
-                ListElement { credits: "$500,500.00"; coin: "100,999"}
-            ]
         }
     }
 }

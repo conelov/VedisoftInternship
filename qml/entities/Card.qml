@@ -4,8 +4,8 @@ import QtQuick.Layouts 1.12
 Item{
     id: root
 
-    property string coin: "15,000"
-    property string credits: "$235,000.00"
+    property string point: "15,000"
+    property string credit: "$235,000.00"
 
     Rectangle {
         id: rectMain
@@ -37,7 +37,7 @@ Item{
             }
         }
         Text{
-            text: root.credits
+            text: root.credit
             anchors.fill: rectMain
             anchors.leftMargin: rectMain.width/2;
             anchors.bottomMargin: rectMain.height - rectMain._basementHeight
@@ -66,26 +66,26 @@ Item{
             anchors.margins: rectMain._rectMainBorderSize
         }
         Item{
-            implicitHeight: labelCoins.implicitHeight
-            implicitWidth: labelCoins.implicitWidth + labelCoinsText.implicitWidth + _centerGap
+            implicitHeight: labelpoints.implicitHeight
+            implicitWidth: labelpoints.implicitWidth + labelpointsText.implicitWidth + _centerGap
             anchors.centerIn: basement
 
             readonly property int _centerGap: rectMain.width / 70
 
             Text {
-                id: labelCoins
-                text: root.coin
+                id: labelpoints
+                text: root.point
                 font.pixelSize: rectMain._basementHeight / 4
                 color: "white"
             }
             Text {
-                id: labelCoinsText
-                text: "coins"
+                id: labelpointsText
+                text: "points"
                 font.pixelSize: rectMain._basementHeight / 10
                 color: "white"
-                anchors.bottom: labelCoins.bottom
-                anchors.left: labelCoins.right
-                anchors.bottomMargin: labelCoins.implicitHeight / 10
+                anchors.bottom: labelpoints.bottom
+                anchors.left: labelpoints.right
+                anchors.bottomMargin: labelpoints.implicitHeight / 10
                 anchors.leftMargin: parent._centerGap
             }
         }
