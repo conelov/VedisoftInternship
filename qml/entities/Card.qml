@@ -33,19 +33,21 @@ Item{
                 height: rectMain.height / 3
                 width: rectMain.width / 3
                 anchors.centerIn: parent
+                radius: rectMain._radius / 2
             }
         }
-
-        Item{
+        Text{
+            text: root.credits
             anchors.fill: rectMain
             anchors.leftMargin: rectMain.width/2;
             anchors.bottomMargin: rectMain.height - rectMain._basementHeight
+            anchors.rightMargin: 10
 
-            Text{
-                text: root.credits
-                anchors.centerIn: parent
-                font.pixelSize: parent.width / 6
-            }
+            font.pointSize: 255
+            minimumPixelSize: 1
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            fontSizeMode: Text.Fit
         }
 
         Rectangle{
@@ -65,8 +67,11 @@ Item{
         }
         Item{
             implicitHeight: labelCoins.implicitHeight
-            implicitWidth: labelCoins.implicitWidth + labelCoinsText.implicitWidth
+            implicitWidth: labelCoins.implicitWidth + labelCoinsText.implicitWidth + _centerGap
             anchors.centerIn: basement
+
+            readonly property int _centerGap: rectMain.width / 70
+
             Text {
                 id: labelCoins
                 text: root.coin
@@ -81,7 +86,7 @@ Item{
                 anchors.bottom: labelCoins.bottom
                 anchors.left: labelCoins.right
                 anchors.bottomMargin: labelCoins.implicitHeight / 10
-                anchors.leftMargin: 10
+                anchors.leftMargin: parent._centerGap
             }
         }
     }
