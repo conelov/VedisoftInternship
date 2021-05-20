@@ -6,27 +6,34 @@
 #define VEDISOFTINTERNSHIP_AGGREGATES_HPP
 #include "src/deffwd.hpp"
 #include <QPixmap>
+#include <QVariant>
 
 namespace qml
 {
 class Card {
   Q_GADGET
+  Q_PROPERTY(QString credit MEMBER credit)
+  Q_PROPERTY(QString point MEMBER point)
 
 public:
-  quint32 cash DEBUG_INITNULL(std::numeric_limits<quint32>::max()), point
-      DEBUG_INITNULL(std::numeric_limits<quint32>::max());
-  QPixmap image;
-};
-
-class Provider {
-  Q_GADGET
-
-public:
-  qsizetype id DEBUG_INITNULL(std::numeric_limits<qsizetype>::max());
-  QString title DEUBG_INITNULLSTR;
-  QVector<Card *> linkCards;
+  QString credit, point;
 };
 } // namespace qml
+Q_DECLARE_METATYPE(qml::Card)
+
+namespace qml
+{
+class Provider {
+  Q_GADGET
+  Q_PROPERTY(QString title MEMBER title)
+  Q_PROPERTY(QVariantList cards MEMBER cards)
+
+public:
+  QString title;
+  QVariantList cards;
+};
+} // namespace qml
+Q_DECLARE_METATYPE(qml::Provider)
 
 class Card {
 public:
@@ -45,4 +52,6 @@ public:
   QString title DEUBG_INITNULLSTR, imageUrl DEUBG_INITNULLSTR;
   QVector<Card> linkCards;
 };
+
+using ProviderVector= QVector<Provider>;
 #endif // VEDISOFTINTERNSHIP_AGGREGATES_HPP

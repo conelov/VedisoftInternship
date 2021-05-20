@@ -19,7 +19,10 @@ set(${PROJECT_NAME}_files
         src/configLoader/ConfigLoader.cpp src/configLoader/ConfigLoader.hpp
         src/configLoader/ConfigCache.hpp src/configLoader/ConfigCache.cpp
         src/entities/aggregates.hpp
-        src/MarshalJson.cpp src/MarshalJson.hpp src/utils.hpp)
+        src/MarshalJson.cpp src/MarshalJson.hpp
+        src/utils.hpp
+        src/AppEngine.hpp
+        src/models/ModelProviderCard.hpp)
 
 find_package(Threads REQUIRED)
 

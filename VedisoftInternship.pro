@@ -32,6 +32,7 @@ DEPENDPATH += $$PWD/3rdparty/logger/include
 DESTDIR = bin
 
 HEADERS += \
+    src/AppEngine.hpp \
     src/MarshalJson.hpp \
     src/configLoader/ConfigCache.hpp \
     src/configLoader/ConfigLoader.hpp \
@@ -39,6 +40,7 @@ HEADERS += \
     src/entities/aggregates.hpp \
     src/logger/Logger.hpp \
     src/logger/LoggerConfig.hpp \
+    src/models/ModelProviderCard.hpp \
     src/utils.hpp
 
 SOURCES += \

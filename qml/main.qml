@@ -16,43 +16,19 @@ Window {
     property int cardHeight: 185
     property int cardWidth: 200
 
-    ListModel {
-        id: providerModel
-
-        ListElement {
-            name: "Apple.com"
-            attributes: [
-                ListElement { credits: "$1,000.99"; coin: "10"},
-                ListElement { credits: "$9,999.01"; coin: "0"}
-            ]
-        }
-        ListElement {
-            name: "iTunes"
-            attributes: [
-                ListElement { credits: "$1,000,000.00"; coin: "20,000"},
-                ListElement { credits: "$0.00"; coin: "0"},
-                ListElement { credits: "$1,000.99"; coin: "10"}
-            ]
-        }
-        ListElement {
-            name: "Amazon.com"
-            attributes: [
-                ListElement { credits: "$500,500.00"; coin: "100,999"}
-            ]
-        }
-    }
-
     ListView {
         anchors.fill: parent
         ScrollBar.vertical: ScrollBar{}
 
-        model: providerModel
+        model: app.pcModel
         delegate: lvVerticalListDelegate
     }
 
     Component {
         id: lvVerticalListDelegate
         Item{
+            readonly property var provider: model.display
+
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.margins: marginBase
@@ -60,7 +36,8 @@ Window {
             Text{
                 id: providerText
                 font.pointSize: providerTextPointSize
-                text: model.name
+                color: "#446161"
+                text: provider.title
             }
             ListView{
                 orientation: ListView.Horizontal
@@ -77,8 +54,10 @@ Window {
                     height: marginBase
                 }
 
-                model: attributes
+                model: provider.cards
                 delegate: Item{
+                    readonly property var cardData: model.modelData
+
                     width: cardWidth
                     anchors.top: parent.top
                     anchors.bottom: parent.bottom
@@ -88,8 +67,8 @@ Window {
                         id: card
                         anchors.fill: parent
 
-                        credit: model.credits
-                        point: model.coin
+                        point: cardData.point
+                        credit: cardData.credit
                     }
 
                     DropShadow {

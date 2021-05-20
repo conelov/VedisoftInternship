@@ -51,25 +51,25 @@ namespace
 {
 QVector<Provider> const providers{
   {
+      "Amazon.com",
+      { QVariant::fromValue(Card{ "$1,000,000.00", "20,000" }),
+        QVariant::fromValue(Card{ "$0.00", "0" }) },
+
+  },
+  {
       "iTunes",
       { QVariant::fromValue(Card{ "$123.00", "990,000" }),
         QVariant::fromValue(Card{ "$0.99", "1" }),
         QVariant::fromValue(Card{ "$999,000.09", "25,000" }) },
 
-  },
-  {
-      "Amazon.com",
-      { QVariant::fromValue(Card{ "$1,000,000.00", "20,000" }),
-        QVariant::fromValue(Card{ "$0.00", "0" }) },
-
   }
 };
 
-class TestModel: public QAbstractListModel {
+class ModelProviderCard: public QAbstractListModel {
   Q_OBJECT
 
 public:
-  explicit TestModel(QObject *parent= nullptr)
+  explicit ModelProviderCard(QObject *parent= nullptr)
       : QAbstractListModel(parent)
   {}
   // Basic functionality:
@@ -93,6 +93,20 @@ public:
     return QVariant::fromValue(providers[index.row()]);
   }
 };
+
+class AppEngine final : public QObject{
+  Q_OBJECT
+  Q_PROPERTY(ModelProviderCard _pcModel READ pcModel)    /// Provider Card Model
+
+  ModelProviderCard _pcModel;
+public:
+  Q_INVOKABLE ModelProviderCard const & pcModel() const{
+    return _pcModel;
+  }
+
+
+
+};
 } // namespace
 
 int main(int argc, char *argv[])
@@ -115,7 +129,7 @@ int main(int argc, char *argv[])
       Qt::QueuedConnection);
   engine.load(url);
 
-  TestModel model;
+  ModelProviderCard model;
   engine.rootContext()->setContextProperty("md", &model);
 
   return QGuiApplication::exec();
