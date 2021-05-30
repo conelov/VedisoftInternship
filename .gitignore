@@ -1,6 +1,8 @@
 bin
+/architecture.md
 /lib
 .idea
+.sqlite
 *.pro.user
 cmake-build-*
 build-*

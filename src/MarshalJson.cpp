@@ -3,7 +3,8 @@
 //
 
 #include "MarshalJson.hpp"
-#include "src/entities/aggregates.hpp"
+#include "src/entities/Card.hpp"
+#include "src/entities/Provider.hpp"
 
 #if defined(MARSHALJSON_DESERIALIZE_CHECK) ||                                  \
     defined(MARSHALJSON_DESERIALIZE_VALUE)
@@ -26,8 +27,7 @@
       return val;                                                              \
     }()
 #else
-  #define MARSHALJSON_DESERIALIZE_VALUE(source, key)                           \
-    source.value(key)
+  #define MARSHALJSON_DESERIALIZE_VALUE(source, key) source.value(key)
 #endif
 
 QJsonValue objExtractValue(QJsonObject const &obj, QString const &key)
@@ -49,34 +49,37 @@ QVector<Provider> MarshalJson::deserialize(const QJsonDocument &jsonIn)
     provider1.id= objExtractValue(provider1_j, QStringLiteral("id")).toInt();
     provider1.title=
         objExtractValue(provider1_j, QStringLiteral("title")).toString();
-    provider1.imageUrl=
+    provider1.image_url=
         objExtractValue(provider1_j, QStringLiteral("image_url")).toString();
     {
       auto const cards_j=
           objExtractValue(provider1_j, QStringLiteral("gift_cards")).toArray();
-      provider1.linkCards.reserve(cards_j.size());
+      provider1.cards.reserve(cards_j.size());
 
       for (auto it : cards_j) {
         auto const card1_j= it.toObject();
         Card card1;
 
         card1.id= objExtractValue(provider1_j, QStringLiteral("id")).toInt();
-        card1.credits=
-            objExtractValue(card1_j, QStringLiteral("credits")).toInt();
-        card1.codes_count=
-            objExtractValue(card1_j, QStringLiteral("codes_count")).toInt();
         card1.featured=
             objExtractValue(card1_j, QStringLiteral("featured")).toBool();
+        /// TODO add parse card.title -> card1.title, card1.credit
         card1.title=
             objExtractValue(card1_j, QStringLiteral("title")).toString();
+        card1.point=
+            objExtractValue(card1_j, QStringLiteral("credits")).toInt();
         card1.image_url=
             objExtractValue(card1_j, QStringLiteral("image_url")).toString();
+        card1.codes_count=
+            objExtractValue(card1_j, QStringLiteral("codes_count")).toInt();
+        card1.currency=
+            objExtractValue(card1_j, QStringLiteral("currency")).toInt();
         card1.description=
             objExtractValue(card1_j, QStringLiteral("description")).toString();
         card1.redeem_url=
             objExtractValue(card1_j, QStringLiteral("redeem_url")).toString();
 
-        provider1.linkCards.push_back(std::move(card1));
+        provider1.cards.push_back(std::move(card1));
       }
     }
 

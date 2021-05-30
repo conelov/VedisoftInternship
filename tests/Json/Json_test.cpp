@@ -1,5 +1,5 @@
-#include "../src/MarshalJson.hpp"
-#include "src/entities/aggregates.hpp"
+#include "src/MarshalJson.hpp"
+#include "src/entities/Provider.hpp"
 #include <gtest/gtest.h>
 
 #ifndef NDEBUG
@@ -24,14 +24,14 @@ static QJsonDocument const jsonDocumentSource= []
 }();
 }
 
-TEST(MarhalJson, _1)
+TEST(MarshalJson, _1)
 {
   auto const deserial= MarshalJson::deserialize(jsonDocumentSource);
   for (auto const &provider : deserial) {
     ASSERT_EQ(provider.id, 2);
     ASSERT_EQ(provider.title, QStringLiteral("Amazon.com"));
     ASSERT_EQ(
-        provider.imageUrl,
+        provider.image_url,
         QStringLiteral("http://g-ec2.images-amazon.com/images/G/01/social/"
                        "api-share/amazon_logo_500500.png"));
   }

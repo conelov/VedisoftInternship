@@ -2,88 +2,103 @@ cmake_minimum_required(VERSION 3.16)
 project(VedisoftInternship)
 set(CMAKE_CXX_STANDARD 17)
 set(QT_VERSION 5)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(${PROJECT_NAME}_REQUIRED_LIBS_QUALIFIED
-        Threads::Threads
-        "${PROJECT_SOURCE_DIR}/3rdparty/logger/lib/liblog4cpp.so"
-        )
-set(${PROJECT_NAME}_INCLUDE_DIR
-        "${PROJECT_SOURCE_DIR}"
-        "${PROJECT_SOURCE_DIR}/3rdparty/logger/include/"
-        )
-set(${PROJECT_NAME}_files
+find_package(Qt${QT_VERSION} REQUIRED COMPONENTS Core Quick Sql REQUIRED)
+find_package(Threads REQUIRED)
+add_subdirectory("$ENV{CLP_DIR}/googletest" gtestBuild)
+
+set(${PROJECT_NAME}_RESOURCES
         qml.qrc
+        )
+
+add_library(${PROJECT_NAME}_impl STATIC
+        ${${PROJECT_NAME}_RESOURCES}
         src/logger/Logger.cpp src/logger/Logger.hpp
         src/logger/LoggerConfig.hpp
         src/deffwd.hpp
         src/configLoader/ConfigLoader.cpp src/configLoader/ConfigLoader.hpp
         src/configLoader/ConfigCache.hpp src/configLoader/ConfigCache.cpp
-        src/entities/aggregates.hpp
+        src/entities/Card.hpp
+        src/entities/Provider.hpp
         src/MarshalJson.cpp src/MarshalJson.hpp
         src/utils.hpp
-        src/AppEngine.hpp
-        src/models/ModelProviderCard.hpp)
-
-find_package(Threads REQUIRED)
-
-add_subdirectory("$ENV{CLP_DIR}/googletest" gtestBuild)
-
-find_package(Qt${QT_VERSION} REQUIRED COMPONENTS Core Quick REQUIRED)
-list(APPEND ${PROJECT_NAME}_REQUIRED_LIBS_QUALIFIED
-        Qt${QT_VERSION}::Core Qt${QT_VERSION}::Quick
+        src/AppEngine.hpp src/AppEngine.cpp
+        src/models/ModelProviderCard.hpp src/models/ModelProviderCard.cpp
+        src/DBLink/DBLink.cpp src/DBLink/DBLink.hpp
+        src/entities/Provider.hpp
+        $<$<CONFIG:Debug>:testValues/values.hpp>
+        src/PropertyGenerator.hpp
+        src/entities/qHashSupport.cpp
+        src/DBLink/DBLinkExecutor.hpp)
+target_link_libraries(${PROJECT_NAME}_impl PUBLIC
+        Threads::Threads
+        "${PROJECT_SOURCE_DIR}/3rdparty/logger/lib/liblog4cpp.so"
+        Qt${QT_VERSION}::Core Qt${QT_VERSION}::Quick Qt${QT_VERSION}::Sql
         )
+target_include_directories(${PROJECT_NAME}_impl PUBLIC
+        "${PROJECT_SOURCE_DIR}"
+        "${PROJECT_SOURCE_DIR}/3rdparty/logger/include/"
+        )
+target_compile_definitions(${PROJECT_NAME}_impl
+        PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 
 add_executable(${PROJECT_NAME}_main
         main.cpp
-        ${${PROJECT_NAME}_files}
+        ${${PROJECT_NAME}_RESOURCES}
         )
-target_link_libraries(${PROJECT_NAME}_main
-        PUBLIC
-        ${${PROJECT_NAME}_REQUIRED_LIBS_QUALIFIED}
-        )
-target_include_directories(${PROJECT_NAME}_main PUBLIC
-        ${${PROJECT_NAME}_INCLUDE_DIR}
-        )
-set_target_properties(${PROJECT_NAME}_main PROPERTIES
-        AUTOMOC ON
-        AUTORCC ON
-        INCLUDE_CURRENT_DIR ON
-        )
-target_compile_definitions(${PROJECT_NAME}_main
-        PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
-
-add_executable(${PROJECT_NAME}_touchTests
-        testsTouch/MarshalJson.cpp
-        ${${PROJECT_NAME}_files}
-        )
-target_link_libraries(${PROJECT_NAME}_touchTests
-        PUBLIC
-        ${${PROJECT_NAME}_REQUIRED_LIBS_QUALIFIED}
-        )
-target_include_directories(${PROJECT_NAME}_touchTests PUBLIC
-        ${${PROJECT_NAME}_INCLUDE_DIR}
-        )
-set_target_properties(${PROJECT_NAME}_touchTests PROPERTIES
-        AUTOMOC ON
-        #        AUTORCC ON
-        INCLUDE_CURRENT_DIR ON
+target_link_libraries(${PROJECT_NAME}_main PUBLIC
+        ${PROJECT_NAME}_impl
         )
 
-add_executable(${PROJECT_NAME}_tests
-        testingProj/test.cpp
-        ${${PROJECT_NAME}_files}
-        )
-target_link_libraries(${PROJECT_NAME}_tests
-        PUBLIC
-        ${${PROJECT_NAME}_REQUIRED_LIBS_QUALIFIED}
-        gtest_main
-        )
-target_include_directories(${PROJECT_NAME}_tests PUBLIC
-        ${${PROJECT_NAME}_INCLUDE_DIR}
-        )
-set_target_properties(${PROJECT_NAME}_tests PROPERTIES
-        AUTOMOC ON
-        #        AUTORCC ON
-        INCLUDE_CURRENT_DIR ON
-        RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/testingProj/bin
-        )
+function(addTestSubproj NAME)
+    set(SubprojDir "${PROJECT_SOURCE_DIR}/tests/${NAME}")
+    set(testFile ${SubprojDir}/${NAME}_test.cpp)
+    set(mainFile ${SubprojDir}/${NAME}_main.cpp)
+    file(MAKE_DIRECTORY ${SubprojDir})
+    if (NOT EXISTS ${testFile})
+        configure_file(testTemplate.cpp.in ${testFile})
+    endif ()
+    if (NOT EXISTS ${mainFile})
+        configure_file(testMainFileTemplate.cpp.in ${mainFile})
+    endif ()
+    add_executable(${NAME}_test
+            ${testFile}
+            ${mainFile}
+            ${${PROJECT_NAME}_RESOURCES}
+            )
+    target_link_libraries(${NAME}_test PUBLIC
+            ${PROJECT_NAME}_impl
+            gtest
+            )
+    set_target_properties(${NAME}_test PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${SubprojDir}/bin"
+            )
+endfunction()
+
+addTestSubproj(DB)
+addTestSubproj(Json)
+
+function(addTouchSubproj NAME)
+    set(SubprojDir "${PROJECT_SOURCE_DIR}/touchSubproj/${NAME}")
+    set(touchMainFile ${SubprojDir}/${NAME}_touch.cpp)
+    file(MAKE_DIRECTORY ${SubprojDir})
+    if (NOT EXISTS ${touchMainFile})
+        configure_file(touchTemplate.cpp.in ${touchMainFile})
+    endif ()
+    add_executable(${NAME}_touch
+            ${touchMainFile}
+            ${${PROJECT_NAME}_RESOURCES}
+            )
+    target_link_libraries(${NAME}_touch PUBLIC
+            ${PROJECT_NAME}_impl
+            )
+    set_target_properties(${NAME}_touch PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${SubprojDir}/bin"
+            )
+endfunction()
+
+addTouchSubproj(DB)
+addTouchSubproj(PropertiesGenerator)

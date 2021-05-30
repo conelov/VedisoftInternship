@@ -67,8 +67,8 @@ Window {
                         id: card
                         anchors.fill: parent
 
-                        point: cardData.point
-                        credit: cardData.credit
+                        point: cardData.pointStr
+                        credit: cardData.creditStr
                     }
 
                     DropShadow {

@@ -27,10 +27,10 @@
 #ifdef DEUBG_INITNULLSTR
   #error "^^ redefinition"
 #endif
-#ifndef NDEBUG
-  #define DEUBG_INITNULLSTR = DEUBG_NULLSTR
-#else
-  #define DEUBG_INITNULLSTR
-#endif
+#define DEUBG_INITNULLSTR DEBUG_INITNULL(DEUBG_NULLSTR)
 
+class Provider;
+template<typename T>
+class QVector;
+using ProviderVector= QVector<Provider>;
 #endif // VEDISOFTINTERNSHIP_DEFFWD_HPP

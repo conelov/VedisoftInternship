@@ -17,7 +17,7 @@
 namespace log4cpp {
 
 /**
- * Extend this abstract class to create your own log layout format.
+ * Extend this abstract class to connect your own log layout format.
  **/
     class LOG4CPP_EXPORT Layout {
         public:
@@ -28,7 +28,7 @@ namespace log4cpp {
 
         /**
          * Formats the LoggingEvent data to a string that appenders can log.
-         * Implement this method to create your own layout format.
+         * Implement this method to connect your own layout format.
          * @param event The LoggingEvent.
          * @returns an appendable string.
          **/

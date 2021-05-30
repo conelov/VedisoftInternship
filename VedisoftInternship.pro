@@ -1,4 +1,4 @@
-QT += quick
+QT += quick sql
 
 CONFIG += c++17
 
@@ -13,6 +13,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+RESOURCES += \
+    qml.qrc \
+    qml/entities/Card.qml \
+    qml/main.qml
+
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
 
@@ -24,20 +29,25 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-unix:!macx: LIBS += -L$$PWD/3rdparty/logger/lib/ -llog4cpp
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/3rdparty/logger/lib/release/ -llog4cpp
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/3rdparty/logger/lib/debug/ -llog4cpp
+else:unix: LIBS += -L$$PWD/3rdparty/logger/lib/ -llog4cpp
 
 INCLUDEPATH += $$PWD/3rdparty/logger/include
 DEPENDPATH += $$PWD/3rdparty/logger/include
 
-DESTDIR = bin
+DESTDIR = $$PWD/bin
 
 HEADERS += \
     src/AppEngine.hpp \
+    src/DBLink/DBLink.hpp \
     src/MarshalJson.hpp \
+    src/PropertyGenerator.hpp \
     src/configLoader/ConfigCache.hpp \
     src/configLoader/ConfigLoader.hpp \
     src/deffwd.hpp \
-    src/entities/aggregates.hpp \
+    src/entities/Card.hpp \
+    src/entities/Provider.hpp \
     src/logger/Logger.hpp \
     src/logger/LoggerConfig.hpp \
     src/models/ModelProviderCard.hpp \
@@ -45,9 +55,15 @@ HEADERS += \
 
 SOURCES += \
     main.cpp \
+    src/AppEngine.cpp \
+    src/DBLink/DBLink.cpp \
     src/MarshalJson.cpp \
     src/configLoader/ConfigCache.cpp \
     src/configLoader/ConfigLoader.cpp \
-    src/logger/Logger.cpp
+    src/entities/qHashSupport.cpp \
+    src/logger/Logger.cpp \
+    src/models/ModelProviderCard.cpp
 
-RESOURCES += qml.qrc
+DISTFILES += \
+    qml/entities/Card.qml \
+    qml/main.qml
