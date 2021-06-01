@@ -30,6 +30,12 @@
 #define DEUBG_INITNULLSTR DEBUG_INITNULL(DEUBG_NULLSTR)
 
 class Provider;
+class Card;
+class Logger;
+class NetManager;
+class ModelProviderCard;
+class ConfigCache;
+class NetManager;
 template<typename T>
 class QVector;
 using ProviderVector= QVector<Provider>;

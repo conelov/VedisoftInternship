@@ -72,7 +72,7 @@
    if (logger.isDebugEnabled()) logger.debugStream()
 
 
-// stream logging with default logger "logger"
+// stream logging with default Logger "Logger"
 #define LOG4CPP_EMERG_SD() \
    if (logger.isEmergEnabled()) logger.emergStream()
 

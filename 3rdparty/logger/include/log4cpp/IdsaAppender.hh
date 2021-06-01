@@ -19,7 +19,7 @@ namespace log4cpp {
 
     /**
      * IdsaAppender is an Appender that sends LoggingEvents to the IDS/A 
-     * logger and reference monitor by Marc Welz. 
+     * Logger and reference monitor by Marc Welz.
      * See http://jade.cs.uct.ac.za/idsa/ for more information on IDS/A.
      **/
     class IdsaAppender : public AppenderSkeleton {

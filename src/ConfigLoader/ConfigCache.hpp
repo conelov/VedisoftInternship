@@ -4,16 +4,12 @@
 
 #ifndef VEDISOFTINTERNSHIP_CONFIGCACHE_HPP
 #define VEDISOFTINTERNSHIP_CONFIGCACHE_HPP
-#include <QScopedPointer>
+#include "src/Logger/LoggerConfig.hpp"
+#include "src/NetManager/NetManagerConfig.hpp"
 
-class LoggerConfig;
-
-class ConfigCache {
-public:
-  QScopedPointer<LoggerConfig> logger;
-
-  ~ConfigCache();
-  ConfigCache();
+struct ConfigCache {
+  LoggerConfig logger;
+  NetManagerConfig netManager;
 };
 
 #endif // VEDISOFTINTERNSHIP_CONFIGCACHE_HPP

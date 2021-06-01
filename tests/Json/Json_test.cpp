@@ -13,7 +13,7 @@ static QJsonDocument const jsonDocumentSource= []
   QJsonDocument jsonDocument;
   QByteArray data;
   {
-    QFile file("../fileInput/jsonSrc.json");
+    QFile file("../fileInput/jsonSrcNet.json");
     assert(file.open(QIODevice::ReadOnly | QIODevice::Text));
     data= file.readAll();
   }
@@ -27,12 +27,10 @@ static QJsonDocument const jsonDocumentSource= []
 TEST(MarshalJson, _1)
 {
   auto const deserial= MarshalJson::deserialize(jsonDocumentSource);
-  for (auto const &provider : deserial) {
-    ASSERT_EQ(provider.id, 2);
-    ASSERT_EQ(provider.title, QStringLiteral("Amazon.com"));
-    ASSERT_EQ(
-        provider.image_url,
-        QStringLiteral("http://g-ec2.images-amazon.com/images/G/01/social/"
-                       "api-share/amazon_logo_500500.png"));
-  }
+  ASSERT_EQ(deserial.front().id, 1);
+  ASSERT_EQ(deserial.front().title, QStringLiteral("Amazon.com"));
+  ASSERT_EQ(
+      deserial.front().image_url,
+      QStringLiteral("http://g-ec2.images-amazon.com/images/G/01/social/"
+                     "api-share/amazon_logo_500500.png"));
 }

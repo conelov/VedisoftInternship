@@ -3,7 +3,7 @@
 //
 
 #include "Logger.hpp"
-#include "src/configLoader/ConfigLoader.hpp"
+#include "src/ConfigLoader/ConfigLoader.hpp"
 #include "src/utils.hpp"
 #include <log4cpp/Category.hh>
 #include <log4cpp/FileAppender.hh>

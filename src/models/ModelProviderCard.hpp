@@ -20,6 +20,10 @@ public:
 
   QVariant
   data(const QModelIndex &index, int role= Qt::DisplayRole) const override;
+
+  void changedAll();
+
+  void changedOne(int index);
 };
 
 Q_DECLARE_METATYPE(ModelProviderCard *)

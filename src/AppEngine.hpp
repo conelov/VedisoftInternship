@@ -4,16 +4,17 @@
 
 #ifndef VEDISOFTINTERNSHIP_APPENGINE_HPP
 #define VEDISOFTINTERNSHIP_APPENGINE_HPP
+#include "deffwd.hpp"
 #include <QObject>
 
-class ModelProviderCard;
 class AppEngine final: public QObject {
   Q_OBJECT
   Q_PROPERTY(ModelProviderCard *pcModel READ pcModel CONSTANT)
 
-  struct Data;
-  QScopedPointer<Data> _p;
-  ModelProviderCard *const _providersModel;
+  const QScopedPointer<ConfigCache> _config;
+  const QScopedPointer<ProviderVector> _providers;
+  const QScopedPointer<ModelProviderCard> _providersModel;
+  const QScopedPointer<NetManager> _net;
 
 public:
   ~AppEngine() override;
@@ -21,8 +22,15 @@ public:
 
   Q_INVOKABLE ModelProviderCard *pcModel()
   {
-    return _providersModel;
+    return _providersModel.get();
   }
+
+private:
+  Q_SLOT void netErrorHandler(quint8 errc) const;
+  Q_SLOT void netMinimalHandler(QByteArray sourceData);
+  Q_SLOT void netCardImagePostHandler(Card const & card,QByteArray imageData,int providerIndex);
+
+  Q_SLOT void afterStartHandler() const;
 };
 
 #endif // VEDISOFTINTERNSHIP_APPENGINE_HPP

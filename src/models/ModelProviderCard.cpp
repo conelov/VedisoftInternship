@@ -22,14 +22,14 @@ QVariant ModelProviderCard::data(const QModelIndex &index, int role) const
     return QVariant();
 
   return QVariant::fromValue(providers[index.row()]);
-
-  //  auto const &provider= providers[index.row()];
-  //  Provider qmlProvider{ provider.title };
-  //  for (auto const &card : provider.cards) {
-  //    qmlProvider.cards.push_back(QVariant::fromValue(
-  //        Card{ QStringLiteral("$") + QString::number(card.point),
-  //                   QString::number(card.codes_count) }));
-  //  }
-
-  //  return QVariant::fromValue(qmlProvider);
+}
+void ModelProviderCard::changedAll()
+{
+  emit dataChanged(index(0,0), index(rowCount(),0));
+  emit layoutChanged();
+}
+void ModelProviderCard::changedOne(int i)
+{
+  emit dataChanged(index(i,0), index(i,0));
+  emit layoutChanged();
 }

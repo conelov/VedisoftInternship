@@ -16,11 +16,11 @@ set(${PROJECT_NAME}_RESOURCES
 
 add_library(${PROJECT_NAME}_impl STATIC
         ${${PROJECT_NAME}_RESOURCES}
-        src/logger/Logger.cpp src/logger/Logger.hpp
-        src/logger/LoggerConfig.hpp
+        src/Logger/Logger.cpp src/Logger/Logger.hpp
+        src/Logger/LoggerConfig.hpp
         src/deffwd.hpp
-        src/configLoader/ConfigLoader.cpp src/configLoader/ConfigLoader.hpp
-        src/configLoader/ConfigCache.hpp src/configLoader/ConfigCache.cpp
+        src/ConfigLoader/ConfigLoader.cpp src/ConfigLoader/ConfigLoader.hpp
+        src/ConfigLoader/ConfigCache.hpp
         src/entities/Card.hpp
         src/entities/Provider.hpp
         src/MarshalJson.cpp src/MarshalJson.hpp
@@ -32,7 +32,8 @@ add_library(${PROJECT_NAME}_impl STATIC
         $<$<CONFIG:Debug>:testValues/values.hpp>
         src/PropertyGenerator.hpp
         src/entities/qHashSupport.cpp
-        src/DBLink/DBLinkExecutor.hpp)
+        src/DBLink/DBLinkExecutor.hpp
+        src/NetManager/NetManager.cpp src/NetManager/NetManager.hpp src/NetManager/NetManagerConfig.hpp)
 target_link_libraries(${PROJECT_NAME}_impl PUBLIC
         Threads::Threads
         "${PROJECT_SOURCE_DIR}/3rdparty/logger/lib/liblog4cpp.so"
