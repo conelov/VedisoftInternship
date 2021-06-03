@@ -28,8 +28,8 @@ void ModelProviderCard::changedAll()
   emit dataChanged(index(0,0), index(rowCount(),0));
   emit layoutChanged();
 }
-void ModelProviderCard::changedOne(int i)
-{
-  emit dataChanged(index(i,0), index(i,0));
-  emit layoutChanged();
-}
+//void ModelProviderCard::changedOne(int i)
+//{
+//  emit dataChanged(index(i,0), index(i,0));
+//  emit layoutChanged();
+//}

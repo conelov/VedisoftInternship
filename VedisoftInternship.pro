@@ -24,13 +24,6 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/3rdparty/logger/lib/release/ -llog4cpp
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/3rdparty/logger/lib/debug/ -llog4cpp
-else:unix: LIBS += -L$$PWD/3rdparty/logger/lib/ -llog4cpp
-
-INCLUDEPATH += $$PWD/3rdparty/logger/include
-DEPENDPATH += $$PWD/3rdparty/logger/include
-
 DESTDIR = $$PWD/bin
 
 RESOURCES += \
@@ -68,3 +61,16 @@ SOURCES += \
 DISTFILES += \
     qml/entities/Card.qml \
     qml/main.qml
+
+unix:!macx: LIBS += -L$$PWD/3rdparty/logger/lib_nix/ -llog4cpp
+
+INCLUDEPATH += $$PWD/3rdparty/logger/lib_nix
+DEPENDPATH += $$PWD/3rdparty/logger/lib_nix
+
+win32: LIBS += -L$$PWD/3rdparty/logger/lib_win/ -llog4cpp
+
+INCLUDEPATH += $$PWD/3rdparty/logger/include
+DEPENDPATH += $$PWD/3rdparty/logger/include
+
+win32:!win32-g++: PRE_TARGETDEPS += $$PWD/3rdparty/logger/lib_win/log4cpp.lib
+else:win32-g++: PRE_TARGETDEPS += $$PWD/3rdparty/logger/lib_win/liblog4cpp.a

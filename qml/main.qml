@@ -69,6 +69,7 @@ Window {
 
                         point: cardData.pointStr
                         credit: cardData.creditStr
+                        image_url: cardData.image_url
                     }
 
                     DropShadow {

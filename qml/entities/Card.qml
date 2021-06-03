@@ -35,7 +35,10 @@ Item{
                 anchors.leftMargin: anchors.topMargin/3
                 anchors.rightMargin: anchors.leftMargin
                 fillMode: Image.PreserveAspectCrop
-                source: root.image_url
+                source:  {
+                    console.debug("UPDATE IMAGE: " + root.image_url);
+                    return root.image_url;
+                }
             }
         }
         Text{

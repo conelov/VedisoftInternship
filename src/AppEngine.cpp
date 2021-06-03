@@ -67,6 +67,6 @@ void AppEngine::netMinimalHandler(QByteArray const sourceData)
 void AppEngine::netCardImagePostHandler(Card const & card, QByteArray const imageData,int providerIndex)
 {
   qDebug() << "netImageHandler";
-
-  _providersModel->changedOne(providerIndex);
+  assert(false);
+  //  _providersModel->changedOne(providerIndex);
 }

@@ -23,7 +23,7 @@ public:
 
   void changedAll();
 
-  void changedOne(int index);
+//  void changedOne(int index);
 };
 
 Q_DECLARE_METATYPE(ModelProviderCard *)
