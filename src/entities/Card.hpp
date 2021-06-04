@@ -15,20 +15,20 @@
 class Card {
   Q_GADGET
 
-  Q_PROPERTY(bool featured MEMBER featured CONSTANT)
-  Q_PROPERTY(uint id MEMBER id CONSTANT)
-  Q_PROPERTY(uint codes_count MEMBER codes_count CONSTANT)
-  Q_PROPERTY(uint credit MEMBER credit CONSTANT)
-  Q_PROPERTY(uint point MEMBER point CONSTANT)
+  Q_PROPERTY(bool featured MEMBER featured)
+  Q_PROPERTY(uint id MEMBER id)
+  Q_PROPERTY(uint codes_count MEMBER codes_count)
+  Q_PROPERTY(uint credit MEMBER credit)
+  Q_PROPERTY(uint point MEMBER point)
 
-  Q_PROPERTY(QString title MEMBER title CONSTANT)
-  Q_PROPERTY(QString image_url MEMBER image_url CONSTANT)
-  Q_PROPERTY(QString currency MEMBER currency CONSTANT)
-  Q_PROPERTY(QString description MEMBER description CONSTANT)
-  Q_PROPERTY(QString redeem_url MEMBER redeem_url CONSTANT)
+  Q_PROPERTY(QString title MEMBER title)
+  Q_PROPERTY(QString image_url MEMBER image_url)
+  Q_PROPERTY(QString currency MEMBER currency)
+  Q_PROPERTY(QString description MEMBER description)
+  Q_PROPERTY(QString redeem_url MEMBER redeem_url)
 
-  Q_PROPERTY(QString creditStr READ creditStr CONSTANT)
-  Q_PROPERTY(QString pointStr READ pointStr CONSTANT)
+  Q_PROPERTY(QString creditStr READ creditStr)
+  Q_PROPERTY(QString pointStr READ pointStr)
 
 public:
   bool featured DEBUG_INITNULL(false);

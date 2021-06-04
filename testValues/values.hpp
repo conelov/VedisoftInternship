@@ -23,6 +23,7 @@ inline static const ProviderVector providers= []
   ProviderVector ret;
   {
     Provider provider;
+    provider.id = 1011;
     provider.title= "Amazon.com";
     {
       Card card;
@@ -34,6 +35,7 @@ inline static const ProviderVector providers= []
   }
   {
     Provider provider;
+    provider.id = 8939;
     provider.title= "iTunes";
     provider.cards.push_back(card);
     {

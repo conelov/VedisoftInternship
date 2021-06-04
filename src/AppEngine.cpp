@@ -8,6 +8,7 @@
 #include "src/NetManager/NetManager.hpp"
 #include "src/models/ModelProviderCard.hpp"
 #include "src/utils.hpp"
+#include "src/DBLink/DBLink.hpp"
 
 #include "testValues/values.hpp"
 
@@ -56,17 +57,19 @@ void AppEngine::netMinimalHandler(QByteArray const sourceData)
         QJsonDocument::fromJson(sourceData, &errorPtr));
     assert(errorPtr.error == QJsonParseError::NoError);
   }
-  _providersModel->changedAll();
- qDebug() << "netMinimalHandler, imUrl:" << _providers->front().cards.front().image_url;
 
-//  for (ProviderVector::size_type i{}; i < _providers->size(); ++i)
-//    for (auto const &card : _providers->at(i).cards) {
-//      _net->getImageCard(card, i);
-//    }
+  {
+    DBLink dbLink;
+    dbLink.storeToDB(*_providers);
+    *_providers = dbLink.loadFromDB();
+  }
+
+  _providersModel->changedAll();
+
+ qDebug() << "netMinimalHandler, imUrl:" << _providers->front().cards.front().image_url;
 }
 void AppEngine::netCardImagePostHandler(Card const & card, QByteArray const imageData,int providerIndex)
 {
   qDebug() << "netImageHandler";
   assert(false);
-  //  _providersModel->changedOne(providerIndex);
 }

@@ -62,15 +62,15 @@ DISTFILES += \
     qml/entities/Card.qml \
     qml/main.qml
 
-unix:!macx: LIBS += -L$$PWD/3rdparty/logger/lib_nix/ -llog4cpp
+win32: LIBS += -L$$PWD/3rdparty/log4cpp/lib_win/ -lliblog4cpp.dll
 
-INCLUDEPATH += $$PWD/3rdparty/logger/lib_nix
-DEPENDPATH += $$PWD/3rdparty/logger/lib_nix
+INCLUDEPATH += $$PWD/3rdparty/log4cpp/include
+DEPENDPATH += $$PWD/3rdparty/log4cpp/include
 
-win32: LIBS += -L$$PWD/3rdparty/logger/lib_win/ -llog4cpp
+win32:!win32-g++: PRE_TARGETDEPS += $$PWD/3rdparty/log4cpp/lib_win/liblog4cpp.dll.lib
+else:win32-g++: PRE_TARGETDEPS += $$PWD/3rdparty/log4cpp/lib_win/libliblog4cpp.dll.a
 
-INCLUDEPATH += $$PWD/3rdparty/logger/include
-DEPENDPATH += $$PWD/3rdparty/logger/include
+unix:!macx: LIBS += -L$$PWD/3rdparty/log4cpp/lib_nix/ -llog4cpp
 
-win32:!win32-g++: PRE_TARGETDEPS += $$PWD/3rdparty/logger/lib_win/log4cpp.lib
-else:win32-g++: PRE_TARGETDEPS += $$PWD/3rdparty/logger/lib_win/liblog4cpp.a
+INCLUDEPATH += $$PWD/3rdparty/log4cpp/include
+DEPENDPATH += $$PWD/3rdparty/log4cpp/include

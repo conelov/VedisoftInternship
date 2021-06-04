@@ -6,6 +6,7 @@
 #define VEDISOFTINTERNSHIP_DBLINK_HPP
 #include "src/deffwd.hpp"
 #include <QString>
+#include <QPair>
 
 class QSqlDatabase;
 class QSqlQuery;
@@ -23,7 +24,8 @@ public:
   ~DBLink();
   DBLink();
 
-  void insertToCache(ProviderVector const &providers) const;
+  bool storeToDB(ProviderVector const &providers) const;
+  ProviderVector loadFromDB() const;
 
   /// For unit-test
   /// QSqlQuery type return
@@ -36,13 +38,13 @@ public:
   /// QSqlDatabase type return
   auto getDb() const;
 
+  /// val or null
+  QPair<bool, uint> getDBHash() const;
+
 private:
   void init() const;
 
   bool isValid() const;
-
-  /// val or null
-  auto getDBHash() const;
 
   void dropAll() const;
 };

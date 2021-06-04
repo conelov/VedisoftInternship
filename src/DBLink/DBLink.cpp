@@ -42,31 +42,33 @@ const std::array init{
                  "" TABLE_LOG " (id) ON DELETE CASCADE ON UPDATE CASCADE);"),
   QStringLiteral("CREATE UNIQUE INDEX " TABLE_LOG "_hash_uindex on " TABLE_LOG
                  " (hash);"),
-  QStringLiteral(
-      "CREATE TABLE " TABLE_CARD " ( "
-      " id             integer   primary key autoincrement, "
-      " featured_bool  integer   not null, "
-      " id_own         integer   not null, "
-      " credit         integer   not null, "
-      " point          integer   not null, "
-      " codes_count    integer   not null, "
-      " title          text      not null, "
-      " image_url      text      not null, "
-      " currency       text      not null, "
-      " description    text      not null, "
-      " redeem_url     text      not null, "
-      " id_" TABLE_PROVIDER " int not null "
-      " references " TABLE_PROVIDER " on update cascade on delete cascade"
-//      ",     "
-//      "constraint " TABLE_CARD "_pk unique (id_own, id_" TABLE_PROVIDER ") "
-      ");")
+  QStringLiteral("CREATE TABLE " TABLE_CARD " ( "
+                 " id             integer   primary key autoincrement, "
+                 " featured_bool  integer   not null, "
+                 " id_own         integer   not null, "
+                 " credit         integer   not null, "
+                 " point          integer   not null, "
+                 " codes_count    integer   not null, "
+                 " title          text      not null, "
+                 " image_url      text      not null, "
+                 " currency       text      not null, "
+                 " description    text      not null, "
+                 " redeem_url     text      not null, "
+                 " id_" TABLE_PROVIDER " int not null "
+                 " references " TABLE_PROVIDER
+                 " on update cascade on delete cascade"
+                 //      ",     "
+                 //      "constraint " TABLE_CARD "_pk unique (id_own, id_"
+                 //      TABLE_PROVIDER ") "
+                 ");")
 };
 }
 } // namespace
 
 QString const DBLink::sqlDriveType= QStringLiteral("QSQLITE"),
-    DBLink::dbFileName  = QStringLiteral("dbCache.sqlite"),
-    DBLink::connectName = DBLink::sqlDriveType + '_' + DBLink::dbFileName;
+              DBLink::dbFileName  = QStringLiteral("dbCache.sqlite"),
+              DBLink::connectName=
+                  DBLink::sqlDriveType + '_' + DBLink::dbFileName;
 
 void DBLink::close()
 {
@@ -123,7 +125,7 @@ void DBLink::init() const
     assert(false);
 }
 
-auto DBLink::getDBHash() const
+QPair<bool, uint> DBLink::getDBHash() const
 {
   using RetType= QPair<bool, uint>;
   QSqlQuery sql= exec(QStringLiteral("SELECT hash from " TABLE_LOG "; "));
@@ -138,13 +140,13 @@ auto DBLink::getDBHash() const
   return RetType{ true, sql.value(0).value<uint>() };
 }
 
-void DBLink::insertToCache(const ProviderVector &providers) const
+bool DBLink::storeToDB(const ProviderVector &providers) const
 {
   auto const [dbHashExist, dbHash]= getDBHash();
   uint currentHash;
 
   if (dbHashExist && (currentHash= qHash(providers)) == dbHash)
-    return;
+    return false;
 
   dropAll();
 
@@ -186,7 +188,8 @@ void DBLink::insertToCache(const ProviderVector &providers) const
         assert(false);
       }
       for (PropertyGenerator pg{ card }; pg; ++pg) {
-        if (QLatin1String{ pg.property().name() }.endsWith(QLatin1String{ "Str" })) {
+        if (QLatin1String{ pg.property().name() }.endsWith(
+                QLatin1String{ "Str" })) {
           continue;
         }
         sql.addBindValue(pg.read());
@@ -196,6 +199,7 @@ void DBLink::insertToCache(const ProviderVector &providers) const
     }
   }
   db.commit();
+  return true;
 }
 void DBLink::dropAll() const
 {
@@ -208,4 +212,59 @@ void DBLink::dropAll() const
   }
   db.commit();
   exec(QStringLiteral("VACUUM"), db);
+}
+ProviderVector DBLink::loadFromDB() const
+{
+  assert(isValid());
+
+  auto sql= exec(QStringLiteral(
+      "SELECT "
+      " " TABLE_PROVIDER ".id AS '" TABLE_PROVIDER "_id', "
+      " " TABLE_PROVIDER ".id_own AS '" TABLE_PROVIDER "_id_own', "
+      " " TABLE_PROVIDER ".title AS '" TABLE_PROVIDER "_title', "
+      " " TABLE_PROVIDER ".image_url AS '" TABLE_PROVIDER "_image_url', "
+      " " TABLE_CARD ".featured_bool,"
+      " " TABLE_CARD ".id_own,"
+      " " TABLE_CARD ".codes_count,"
+      " " TABLE_CARD ".credit,"
+      " " TABLE_CARD ".point,"
+      " " TABLE_CARD ".title,"
+      " " TABLE_CARD ".image_url,"
+      " " TABLE_CARD ".currency,"
+      " " TABLE_CARD ".description,"
+      " " TABLE_CARD ".redeem_url"
+      " from " TABLE_PROVIDER " LEFT JOIN " TABLE_CARD " ON " TABLE_PROVIDER
+      ".id = " TABLE_CARD ".id_" TABLE_PROVIDER ""
+      " ORDER BY " TABLE_PROVIDER ".id"));
+
+  if (!sql.first())
+    return {};
+
+  uint lastProviderId= std::numeric_limits<uint>::max();
+  ProviderVector dataRet;
+  do {
+    auto const currProviderId= sql.value(0).toUInt();
+    if (lastProviderId != currProviderId) {
+      lastProviderId= currProviderId;
+      /// New Provider
+      dataRet.push_back({});
+      int count= 1;
+      for (PropertyGenerator pg(dataRet.back()); count < 4 && pg;
+           ++pg, ++count) {
+        pg.write(sql.value(count));
+//        qDebug() << "write prop Provider:" << pg.property().name() << pg.read() << sql.value(count);
+      }
+    }
+
+    int count = 4;
+     dataRet.back().cards.push_back({});
+    auto &card = dataRet.back().cards.back();
+    for(PropertyGenerator pg{card}; count < 14 && pg; ++pg, ++ count)
+    {
+      pg.write(sql.value(count));
+//      qDebug() << "write prop card:" << pg.property().name()<< pg.read() << sql.value(count);
+    }
+  } while (sql.next());
+
+  return dataRet;
 }

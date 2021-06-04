@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
           QCoreApplication::exit(-1);
       },
       Qt::QueuedConnection);
+	///	TODO: image scale
   AppEngine appEngine;
   engine.rootContext()->setContextProperty("app", &appEngine);
   engine.load(url);

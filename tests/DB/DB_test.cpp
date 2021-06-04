@@ -7,10 +7,10 @@
 namespace
 {}
 
-TEST(DB, _1)
+TEST(DB, load)
 {
   DBLink link;
-  link.insertToCache(tstv::providers);
+  link.storeToDB(tstv::providers);
   auto const &provider= tstv::providers.front();
   auto db             = link.getDb();
   for (PropertyGenerator pg{ provider }; pg; ++pg) {
@@ -25,4 +25,28 @@ TEST(DB, _1)
     ASSERT_TRUE(sql.first());
     ASSERT_EQ(pg.read(), sql.value(0));
   }
+}
+
+TEST(DB, store)
+{
+  DBLink link;
+
+  link.storeToDB(tstv::providers);
+  auto providers= link.loadFromDB();
+  ASSERT_TRUE(std::equal(
+      providers.cbegin(),
+      providers.cend(),
+      tstv::providers.cbegin(),
+      [](Provider const &lhs, Provider const &rhs)
+      {
+        for (PropertyGenerator pgl{ lhs }, pgr{ rhs }; pgl && pgr;
+             ++pgl, ++pgr) {
+          if (QLatin1String{ pgl.property().name() } ==
+              QLatin1String{ "cards" })
+            continue;
+          if (pgl.read() != pgr.read())
+            return false;
+        }
+        return true;
+      }));
 }

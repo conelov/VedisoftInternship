@@ -9,10 +9,10 @@
 class Provider {
   Q_GADGET
 
-  Q_PROPERTY(uint id MEMBER id CONSTANT)
-  Q_PROPERTY(QString title MEMBER title CONSTANT)
-  Q_PROPERTY(QString image_url MEMBER image_url CONSTANT)
-  Q_PROPERTY(QVariantList cards READ cardsVariantList CONSTANT)
+  Q_PROPERTY(uint id MEMBER id)
+  Q_PROPERTY(QString title MEMBER title)
+  Q_PROPERTY(QString image_url MEMBER image_url)
+  Q_PROPERTY(QVariantList cards READ cardsVariantList)
 
 public:
   uint id DEBUG_INITNULL(std::numeric_limits<uint>::max());

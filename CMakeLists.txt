@@ -36,12 +36,12 @@ add_library(${PROJECT_NAME}_impl STATIC
         src/NetManager/NetManager.cpp src/NetManager/NetManager.hpp src/NetManager/NetManagerConfig.hpp)
 target_link_libraries(${PROJECT_NAME}_impl PUBLIC
         Threads::Threads
-        "${PROJECT_SOURCE_DIR}/3rdparty/logger/lib/liblog4cpp.so"
+        "${PROJECT_SOURCE_DIR}/3rdparty/log4cpp/lib_nix/liblog4cpp.so"
         Qt${QT_VERSION}::Core Qt${QT_VERSION}::Quick Qt${QT_VERSION}::Sql
         )
 target_include_directories(${PROJECT_NAME}_impl PUBLIC
         "${PROJECT_SOURCE_DIR}"
-        "${PROJECT_SOURCE_DIR}/3rdparty/logger/include/"
+        "${PROJECT_SOURCE_DIR}/3rdparty/log4cpp/include/"
         )
 target_compile_definitions(${PROJECT_NAME}_impl
         PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
@@ -53,6 +53,7 @@ add_executable(${PROJECT_NAME}_main
 target_link_libraries(${PROJECT_NAME}_main PUBLIC
         ${PROJECT_NAME}_impl
         )
+
 
 function(addTestSubproj NAME)
     set(SubprojDir "${PROJECT_SOURCE_DIR}/tests/${NAME}")
