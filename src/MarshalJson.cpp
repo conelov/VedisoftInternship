@@ -66,6 +66,8 @@ QVector<Provider> MarshalJson::deserialize(const QJsonDocument &jsonIn)
         /// TODO add parse card.title -> card1.title, card1.credit
         card1.title=
             objExtractValue(card1_j, QStringLiteral("title")).toString();
+        card1.credit=
+            objExtractValue(card1_j, QStringLiteral("title")).toInt();
         card1.point=
             objExtractValue(card1_j, QStringLiteral("credits")).toInt();
         card1.image_url=
@@ -78,6 +80,8 @@ QVector<Provider> MarshalJson::deserialize(const QJsonDocument &jsonIn)
             objExtractValue(card1_j, QStringLiteral("description")).toString();
         card1.redeem_url=
             objExtractValue(card1_j, QStringLiteral("redeem_url")).toString();
+
+        qDebug() << "log card:" << card1.credit << card1.point;
 
         provider1.cards.push_back(std::move(card1));
       }

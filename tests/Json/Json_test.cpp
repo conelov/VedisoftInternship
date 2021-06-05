@@ -13,7 +13,7 @@ static QJsonDocument const jsonDocumentSource= []
   QJsonDocument jsonDocument;
   QByteArray data;
   {
-    QFile file("../fileInput/jsonSrcNet.json");
+    QFile file("../fileInput/jsonSrcAdvanced.json");
     assert(file.open(QIODevice::ReadOnly | QIODevice::Text));
     data= file.readAll();
   }

@@ -44,7 +44,8 @@ public:
   QString creditStr() const
   {
     /// TODO: Добавить разделители к числам
-    return QString::number(credit);
+//    return QString::number(credit);
+    return title;
   }
   QString pointStr() const
   {

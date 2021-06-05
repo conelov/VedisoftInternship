@@ -182,7 +182,7 @@ bool DBLink::storeToDB(const ProviderVector &providers) const
     for (auto const &card : provider.cards) {
       if (!sql.prepare(QStringLiteral(
               "INSERT INTO " TABLE_CARD " "
-              "(featured_bool,id_own,credit,point,codes_count,title,image_url,"
+              "(featured_bool,id_own,codes_count,credit,point,title,image_url,"
               "currency,description,redeem_url,id_" TABLE_PROVIDER ") "
               "VALUES (?,?,?,?,?,?,?,?,?,?,?)"))) {
         assert(false);

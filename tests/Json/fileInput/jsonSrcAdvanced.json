@@ -1,0 +1,80 @@
+{
+  "providers": [
+    {
+      "id": 1,
+      "title": "Amazon.com",
+      "image_url": "http://g-ec2.images-amazon.com/images/G/01/social/api-share/amazon_logo_500500.png",
+      "gift_cards": [
+        {
+          "id": 1,
+          "featured": false,
+          "title": "$10 Amazon.com",
+          "credits": 8500,
+          "image_url": "http://g-ec2.images-amazon.com/images/G/01/social/api-share/amazon_logo_500500.png",
+          "codes_count": 101,
+          "currency": "USD",
+          "description": "Buy everything from Amazon. It's great.",
+          "redeem_url": "http://www.amazon.com"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Iherb.com",
+      "image_url": "https://www.exportcenter.ru/upload/iblock/420/iHerb_logo_.png",
+      "gift_cards": [
+        {
+          "id": 1,
+          "featured": false,
+          "title": "$5 Iherb.com",
+          "credits": 98770,
+          "image_url": "https://www.exportcenter.ru/upload/iblock/420/iHerb_logo_.png",
+          "codes_count": 101,
+          "currency": "USD",
+          "description": "Trusted Brands. Healthy Rewards.",
+          "redeem_url": "https://www.iherb.com"
+        },
+        {
+          "id": 2,
+          "featured": false,
+          "title": "$60 Iherb.com",
+          "credits": 68540,
+          "image_url": "https://www.exportcenter.ru/upload/iblock/420/iHerb_logo_.png",
+          "codes_count": 101,
+          "currency": "USD",
+          "description": "Trusted Brands. Healthy Rewards.",
+          "redeem_url": "https://www.iherb.com"
+        },
+        {
+          "id": 3,
+          "featured": false,
+          "title": "$9 Iherb.com",
+          "credits": 87600,
+          "image_url": "https://www.exportcenter.ru/upload/iblock/420/iHerb_logo_.png",
+          "codes_count": 101,
+          "currency": "USD",
+          "description": "Trusted Brands. Healthy Rewards.",
+          "redeem_url": "https://www.iherb.com"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "AliExpress.com",
+      "image_url": "http://ae01.alicdn.com/kf/H625cd629fe984c719391fc7289edb4a72.png",
+      "gift_cards": [
+        {
+          "id": 1,
+          "featured": false,
+          "title": "$47 AliExpress.com",
+          "credits": 3460,
+          "image_url": "http://ae01.alicdn.com/kf/H625cd629fe984c719391fc7289edb4a72.png",
+          "codes_count": 101,
+          "currency": "USD",
+          "description": "Smarter Shopping, Better Living!",
+          "redeem_url": "http://www.aliexpress.com"
+        }
+      ]
+    }
+  ]
+}

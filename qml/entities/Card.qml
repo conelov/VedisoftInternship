@@ -6,7 +6,7 @@ Item{
 
     property string point: "15,000"
     property string credit: "$235,000.00"
-    property string image_url: "https://cdn.icon-icons.com/icons2/1380/PNG/512/vcsconflicting_93497.png"
+    property string image_url
 
     Rectangle {
         id: rectMain
@@ -22,24 +22,15 @@ Item{
         border.color: "dimgray"
         border.width: _rectMainBorderSize
 
-        Item{
-            anchors.fill: rectMain
-            anchors.rightMargin: rectMain.width/2;
-            anchors.bottomMargin: rectMain.height - rectMain._basementHeight
-
-            Image {
-                id: image
-                anchors.fill: parent
-                anchors.topMargin: 60
-                anchors.bottomMargin: anchors.topMargin
-                anchors.leftMargin: anchors.topMargin/3
-                anchors.rightMargin: anchors.leftMargin
-                fillMode: Image.PreserveAspectCrop
-                source:  {
-                    console.debug("UPDATE IMAGE: " + root.image_url);
-                    return root.image_url;
-                }
-            }
+        Image {
+            id: image
+            anchors.fill: parent
+            anchors.topMargin: rectMain._radius
+            anchors.bottomMargin: anchors.topMargin + rectMain.height- rectMain._basementHeight
+            anchors.leftMargin: anchors.topMargin / 2
+            anchors.rightMargin:anchors.leftMargin + rectMain.width / 2
+            fillMode: Image.PreserveAspectFit
+            source: root.image_url
         }
         Text{
             text: root.credit

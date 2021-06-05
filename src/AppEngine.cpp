@@ -11,6 +11,7 @@
 #include "src/DBLink/DBLink.hpp"
 
 #include "testValues/values.hpp"
+#include "src/PropertyGenerator.hpp"
 
 AppEngine::~AppEngine()= default;
 
@@ -63,10 +64,8 @@ void AppEngine::netMinimalHandler(QByteArray const sourceData)
     dbLink.storeToDB(*_providers);
     *_providers = dbLink.loadFromDB();
   }
-
   _providersModel->changedAll();
 
- qDebug() << "netMinimalHandler, imUrl:" << _providers->front().cards.front().image_url;
 }
 void AppEngine::netCardImagePostHandler(Card const & card, QByteArray const imageData,int providerIndex)
 {

@@ -11,7 +11,5 @@ Window {
     Card{
         anchors.fill: parent
         anchors.margins: 20
-
-        image_url: "http://g-ec2.images-amazon.com/images/G/01/social/api-share/amazon_logo_500500.png"
     }
 }
