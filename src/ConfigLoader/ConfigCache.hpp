@@ -7,7 +7,8 @@
 #include "src/Logger/LoggerConfig.hpp"
 #include "src/NetManager/NetManagerConfig.hpp"
 
-struct ConfigCache {
+class ConfigCache {
+public:
   LoggerConfig logger;
   NetManagerConfig netManager;
 };

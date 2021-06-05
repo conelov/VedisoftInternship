@@ -8,10 +8,6 @@
 #include <QString>
 #include <QtCore>
 
-#ifndef NDEBUG
-  #include <QDebug>
-#endif
-
 class Card {
   Q_GADGET
 
@@ -32,26 +28,19 @@ class Card {
 
 public:
   bool featured DEBUG_INITNULL(false);
-  uint id DEBUG_INITNULL(std::numeric_limits<uint>::max()),
-      credit DEBUG_INITNULL(std::numeric_limits<uint>::max()),
-      point DEBUG_INITNULL(std::numeric_limits<uint>::max()),
-      codes_count DEBUG_INITNULL(std::numeric_limits<uint>::max());
+  uint id DEBUG_INITNULL(std::numeric_limits<uint>::max());
+  uint credit DEBUG_INITNULL(std::numeric_limits<uint>::max());
+  uint point DEBUG_INITNULL(std::numeric_limits<uint>::max());
+  uint codes_count DEBUG_INITNULL(std::numeric_limits<uint>::max());
 
-  QString title DEUBG_INITNULLSTR, image_url DEUBG_INITNULLSTR,
-      currency DEUBG_INITNULLSTR, description DEUBG_INITNULLSTR,
-      redeem_url DEUBG_INITNULLSTR;
+  QString title DEUBG_INITNULLSTR;
+  QString image_url DEUBG_INITNULLSTR;
+  QString currency DEUBG_INITNULLSTR;
+  QString description DEUBG_INITNULLSTR;
+  QString redeem_url DEUBG_INITNULLSTR;
 
-  QString creditStr() const
-  {
-    /// TODO: Добавить разделители к числам
-//    return QString::number(credit);
-    return title;
-  }
-  QString pointStr() const
-  {
-    /// TODO: Добавить разделители к числам
-    return QString::number(point);
-  }
+  QString creditStr() const;
+  QString pointStr() const;
 };
 Q_DECLARE_METATYPE(Card)
 

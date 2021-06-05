@@ -3,54 +3,61 @@
 //
 
 #include "ConfigLoader.hpp"
-#include "ConfigCache.hpp"
 #include "src/Logger/LoggerConfig.hpp"
-#include "src/NetManager/NetManagerConfig.hpp"
+#include "src/PropertyGenerator.hpp"
 #include "src/deffwd.hpp"
+#include <QCoreApplication>
 #include <QSettings>
 
 namespace
 {
-constexpr auto fileConfigNameDefault= "config.ini";
+auto constexpr appBuildType=
+#ifndef NDEBUG
+    1
+#else
+    2
+#endif
+    ;
 } // namespace
 
-QString ConfigLoader::configFileName= fileConfigNameDefault;
-
-ConfigCache ConfigLoader::load(const QString &filePath)
-{
-  configFileName= filePath;
-  return load();
-}
 ConfigCache ConfigLoader::load()
 {
   ConfigCache confArg;
   QSettings setting(
-      QCoreApplication::applicationDirPath() + '/' + configFileName,
+      QCoreApplication::applicationDirPath() + QChar('/') + configFileName,
       QSettings::Format::IniFormat);
 
   setting.beginGroup("appConfig");
 
-  if (!QFileInfo::exists(configFileName)) {
+  /// Init settings file
+  if (setting.value(QStringLiteral(TO_LITERAL(appBuildType)), 0).toUInt() !=
+      appBuildType) {
+    setting.clear();
+    setting.setValue(QStringLiteral(TO_LITERAL(appBuildType)), appBuildType);
+
     setting.beginGroup(QStringLiteral(TO_LITERAL(Logger)));
-    setting.setValue(QStringLiteral("level"), loggerConfigDefault.level);
-    setting.setValue(
-        QStringLiteral("logFileName"), loggerConfigDefault.logFileName);
+    for (PropertyGenerator pg{ configDefault::logger }; pg; ++pg) {
+      setting.setValue(pg.property().name(), pg.read());
+    }
     setting.endGroup();
 
     setting.beginGroup(QStringLiteral(TO_LITERAL(NetManager)));
-    setting.setValue(QStringLiteral("url"), netManagerDefault.url);
+    for (PropertyGenerator pg(configDefault::netManager); pg; ++pg) {
+      setting.setValue(pg.property().name(), pg.read());
+    }
     setting.endGroup();
   }
 
   setting.beginGroup(QStringLiteral(TO_LITERAL(Logger)));
-  confArg.logger.level=
-      setting.value(QStringLiteral("level")).value<LoggerConfig::Level>();
-  confArg.logger.logFileName=
-      setting.value(QStringLiteral("logFileName")).toString();
+  for (PropertyGenerator pg{ confArg.logger }; pg; ++pg) {
+    pg.write(setting.value(pg.property().name()));
+  }
   setting.endGroup();
 
   setting.beginGroup(QStringLiteral(TO_LITERAL(NetManager)));
-  confArg.netManager.url= setting.value(QStringLiteral("url")).toUrl();
+  for (PropertyGenerator pg(confArg.netManager); pg; ++pg) {
+    pg.write(setting.value(pg.property().name()));
+  }
   setting.endGroup();
 
   setting.endGroup();

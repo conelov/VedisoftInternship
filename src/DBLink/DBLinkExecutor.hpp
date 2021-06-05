@@ -5,12 +5,21 @@
 #ifndef VEDISOFTINTERNSHIP_DBLINKEXECUTOR_HPP
 #define VEDISOFTINTERNSHIP_DBLINKEXECUTOR_HPP
 #include "DBLink.hpp"
+#include "src/Logger/Logger.hpp"
+#include <QSqlError>
 #include <QSqlQuery>
 
-#ifndef NDEBUG
-#include <QDebug>
-#include <QSqlError>
+#if defined(LOG_Error_PREPAPRESQL) || defined(LOG_Error_DBINVALID)
+  #error "^^ redefinition"
 #endif
+
+#define LOG_Error_PREPAPRESQL                                                  \
+  LOG_Error << QStringLiteral("sql request preparation error");
+
+#define LOG_Error_DBINVALID                                                    \
+  LOG_Error << QStringLiteral("invalid database state")                        \
+            << QStringLiteral(                                                 \
+                   "the database failed the check for the number of tables");
 
 inline auto DBLink::getDb() const
 {
@@ -21,9 +30,9 @@ inline auto DBLink::getDb() const
     db= QSqlDatabase::addDatabase(sqlDriveType, connectName);
     db.setDatabaseName(dbFilePath);
   }
-  if (!db.open() && db.isValid()) {
-    qDebug() << "connectName:" << connectName << "filepath:" << dbFilePath;
-    assert(false);
+  if (!db.open() || !db.isValid()) {
+    LOG_Error << QStringLiteral("it is impossible to open a connection to the "
+                                "base or the state of the base is not valid");
   }
   return db;
 }
@@ -33,7 +42,10 @@ inline auto DBLink::exec(const QString &query, QSqlDatabase &db) const
   QSqlQuery sql(db);
   sql.setForwardOnly(true);
   exec(sql, query);
-  assert(sql.isActive());
+  if (!sql.isActive() || sql.isValid()) {
+    LOG_Error << QStringLiteral("pos request error, errc: ")
+              << sql.lastError().text();
+  }
   return sql;
 }
 
@@ -45,15 +57,17 @@ inline auto DBLink::exec(const QString &query) const
 
 inline void DBLink::exec(QSqlQuery &sql, const QString &query) const
 {
-  sql.prepare(query);
+  if (!sql.prepare(query)) {
+    LOG_Error_PREPAPRESQL
+  }
   exec(sql);
 }
 
 inline void DBLink::exec(QSqlQuery &sql) const
 {
   if (!sql.exec()) {
-    qDebug() << "err exec:" << sql.lastQuery() << '\n' << sql.lastError();
-    assert(false);
+    LOG_Error << QStringLiteral("request execution error, errc: ")
+              << sql.lastError().text();
   }
 }
 

@@ -3,21 +3,28 @@
 //
 
 #include "NetManager.hpp"
+#include "NetManagerConfig.hpp"
+#include "src/Logger/Logger.hpp"
 #include "src/entities/Card.hpp"
-#include "src/utils.hpp"
 #include <QNetworkReply>
 
-#include <QDebug>
+namespace
+{
+NetManagerConfig _config= configDefault::netManager;
+}
+
+void NetManager::loadState(const NetManagerConfig &state)
+{
+  _config= state;
+}
 
 NetManager::~NetManager()= default;
+
 NetManager::NetManager()
     : QObject({})
     , _manager(new QNetworkAccessManager)
-{
-  _manager->setObjectName(
-      QStringLiteral(TO_LITERAL(NetManager)) +
-      QStringLiteral(TO_LITERAL(_threadManager)));
-}
+{}
+
 void NetManager::getMinimal()
 {
   auto const reply= _manager->get(QNetworkRequest(_config.url));
@@ -27,21 +34,11 @@ void NetManager::getMinimal()
       this,
       [this, reply]
       {
-        assert(reply->error() == QNetworkReply::NoError);
+        if (reply->error() != QNetworkReply::NoError) {
+          LOG_Warning << "Network request execution error"
+                      << reply->errorString();
+        }
         emit postMinimal(reply->readAll());
-      });
-}
-void NetManager::getImageCard(const Card &card, int providerIndex)
-{
-  assert(card.image_url != DEUBG_NULLSTR);
-  auto reply= _manager->get(QNetworkRequest(QUrl(card.image_url)));
-  QObject::connect(
-      reply,
-      &QNetworkReply::finished,
-      this,
-      [card, reply, providerIndex, this]
-      {
-        assert(reply->error() == QNetworkReply::NoError);
-        emit postImageCard(card, reply->readAll(), providerIndex);
+        reply->deleteLater();
       });
 }

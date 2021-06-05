@@ -4,15 +4,14 @@
 
 #ifndef VEDISOFTINTERNSHIP_CONFIGLOADER_HPP
 #define VEDISOFTINTERNSHIP_CONFIGLOADER_HPP
-#include "src/ConfigLoader/ConfigCache.hpp"
+#include "ConfigCache.hpp"
 
+class QString;
 class ConfigCache;
 
 class ConfigLoader {
-  static QString configFileName;
-
 public:
-  static ConfigCache load(QString const &filePath);
+  inline static QString configFileName= QStringLiteral("config.ini");
   static ConfigCache load();
 };
 

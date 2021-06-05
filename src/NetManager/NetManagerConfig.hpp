@@ -6,12 +6,18 @@
 #define VEDISOFTINTERNSHIP_NETMANAGERCONFIG_HPP
 #include <QUrl>
 
-struct NetManagerConfig
+class NetManagerConfig
 {
+  Q_GADGET
+  Q_PROPERTY(QUrl url MEMBER url)
+
+public:
   QUrl url;
 };
 
-inline const NetManagerConfig netManagerDefault{ QStringLiteral(
+namespace configDefault
+{
+inline const NetManagerConfig netManager{ QStringLiteral(
     "http://office.vedisoft.ru/files/providers.json") };
-
+}
 #endif // VEDISOFTINTERNSHIP_NETMANAGERCONFIG_HPP

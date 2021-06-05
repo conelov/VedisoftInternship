@@ -5,15 +5,17 @@
 #ifndef VEDISOFTINTERNSHIP_DBLINK_HPP
 #define VEDISOFTINTERNSHIP_DBLINK_HPP
 #include "src/deffwd.hpp"
-#include <QString>
 #include <QPair>
+#include <QString>
 
 class QSqlDatabase;
 class QSqlQuery;
 
 class DBLink {
 public:
-  static QString const sqlDriveType, dbFileName, connectName;
+  static QString const sqlDriveType;
+  static QString const dbFileName;
+  static QString const connectName;
 
   static void close();
 

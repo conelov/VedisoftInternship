@@ -1,10 +1,6 @@
-#include "src/MarshalJson.hpp"
+#include "src/MarshalJson/MarshalJson.hpp"
 #include "src/entities/Provider.hpp"
 #include <gtest/gtest.h>
-
-#ifndef NDEBUG
-  #include <QDebug>
-#endif
 
 namespace
 {

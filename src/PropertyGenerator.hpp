@@ -6,7 +6,6 @@
 #define VEDISOFTINTERNSHIP_PROPERTYGENERATOR_HPP
 #include <QMetaProperty>
 #include <QVariant>
-#include <cassert>
 
 template<typename T, typename F= void>
 class PropertyGenerator {

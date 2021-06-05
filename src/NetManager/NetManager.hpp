@@ -4,12 +4,13 @@
 
 #ifndef VEDISOFTINTERNSHIP_NETMANAGER_HPP
 #define VEDISOFTINTERNSHIP_NETMANAGER_HPP
-#include "NetManagerConfig.hpp"
 #include "src/deffwd.hpp"
 #include <QObject>
 
 class QNetworkAccessManager;
 class QNetworkReply;
+class NetManagerConfig;
+
 class NetManager final: public QObject {
   Q_OBJECT
 
@@ -21,10 +22,9 @@ public:
     count
   };
 
-private:
-  inline static NetManagerConfig _config= netManagerDefault;
+  static void loadState(NetManagerConfig const &state);
 
-  //  QThread _threadManager;
+private:
   QScopedPointer<QNetworkAccessManager> _manager;
 
 public:
@@ -32,12 +32,10 @@ public:
   NetManager();
 
   void getMinimal();
-  Q_SIGNAL void postMinimal(QByteArray providers) const;
 
-  void getImageCard(Card const &card, int providerIndex);
-  Q_SIGNAL void postImageCard(Card const & card,QByteArray imageData, int providerIndex) const;
-
-  Q_SIGNAL void error(Errc) const;
+signals:
+  void postMinimal(QByteArray providers) const;
+  void error(NetManager::Errc) const;
 };
 
 #endif // VEDISOFTINTERNSHIP_NETMANAGER_HPP

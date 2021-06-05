@@ -25,13 +25,9 @@ public:
     return _providersModel.get();
   }
 
-private:
-  Q_SLOT void netErrorHandler(quint8 errc) const;
-  Q_SLOT void netMinimalHandler(QByteArray sourceData);
-  Q_SLOT void netCardImagePostHandler(
-      Card const &card, QByteArray imageData, int providerIndex);
-
-  Q_SLOT void afterStartHandler() const;
+private slots:
+  void netMinimalHandler(QByteArray sourceData);
+  void afterStartHandler() const;
 };
 
 #endif // VEDISOFTINTERNSHIP_APPENGINE_HPP

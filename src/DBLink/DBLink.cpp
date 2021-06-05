@@ -3,17 +3,13 @@
 //
 #include "DBLink.hpp"
 #include "DBLinkExecutor.hpp"
+#include "src/Logger/Logger.hpp"
 #include "src/PropertyGenerator.hpp"
 #include "src/entities/Provider.hpp"
 #include "src/utils.hpp"
 #include <QCoreApplication>
 #include <QFileInfo>
 #include <QSqlQuery>
-
-#ifndef NDEBUG
-  #include <QDebug>
-  #include <QSqlError>
-#endif
 
 #if defined(TABLE_PROVIDER) || defined(TABLE_CARD) || defined(TABLE_LOG)
   #error "^^ redefinition"
@@ -93,7 +89,11 @@ DBLink::DBLink()
     QFile::remove(dbFilePath);
     init();
   }
-  assert(isValid());
+#ifndef NDEBUG
+  if (!isValid()) {
+    LOG_Error_DBINVALID
+  }
+#endif
   /// Validation end
 }
 
@@ -117,12 +117,12 @@ void DBLink::init() const
   auto db= getDb();
   exec(QStringLiteral("PRAGMA foreign_keys = on; "), db);
   if (!db.transaction())
-    assert(false);
+    LOG_Error << QStringLiteral("unable to create request transaction");
   for (auto const &query : dbs::init) {
     exec(query, db);
   }
   if (!db.commit())
-    assert(false);
+    LOG_Error << QStringLiteral("unable to commit the request transaction");
 }
 
 QPair<bool, uint> DBLink::getDBHash() const
@@ -132,9 +132,16 @@ QPair<bool, uint> DBLink::getDBHash() const
 
 #ifndef NDEBUG
   /// Check row count log table
-  InvokeOnDestruct callBack{ [&sql] { assert(!sql.next()); } };
+  InvokeOnDestruct callBack{ [&sql]
+                             {
+                               if (sql.next()) {
+                                 LOG_Error << QStringLiteral(
+                                     "database structure error: the number of "
+                                     "rows in the hash table is not equal to "
+                                     "1");
+                               }
+                             } };
 #endif
-
   if (!sql.first())
     return RetType{ false, {} };
   return RetType{ true, sql.value(0).value<uint>() };
@@ -143,7 +150,7 @@ QPair<bool, uint> DBLink::getDBHash() const
 bool DBLink::storeToDB(const ProviderVector &providers) const
 {
   auto const [dbHashExist, dbHash]= getDBHash();
-  uint currentHash;
+  uint currentHash{};
 
   if (dbHashExist && (currentHash= qHash(providers)) == dbHash)
     return false;
@@ -156,7 +163,7 @@ bool DBLink::storeToDB(const ProviderVector &providers) const
   db.transaction();
   if (!sql.prepare(
           QStringLiteral("INSERT INTO " TABLE_LOG "(hash) VALUES (?)"))) {
-    assert(false);
+    LOG_Error_PREPAPRESQL
   }
   sql.addBindValue(currentHash);
   exec(sql);
@@ -168,7 +175,7 @@ bool DBLink::storeToDB(const ProviderVector &providers) const
     if (!sql.prepare(QStringLiteral("INSERT INTO " TABLE_PROVIDER
                                     " (id_own,title,image_url,id_" TABLE_LOG
                                     ") VALUES (?,?,?,?)"))) {
-      assert(false);
+      LOG_Error_PREPAPRESQL
     }
     for (PropertyGenerator pg{ provider }; pg; ++pg) {
       if (QLatin1String{ pg.property().name() } == QLatin1String{ "cards" })
@@ -185,7 +192,7 @@ bool DBLink::storeToDB(const ProviderVector &providers) const
               "(featured_bool,id_own,codes_count,credit,point,title,image_url,"
               "currency,description,redeem_url,id_" TABLE_PROVIDER ") "
               "VALUES (?,?,?,?,?,?,?,?,?,?,?)"))) {
-        assert(false);
+        LOG_Error_PREPAPRESQL
       }
       for (PropertyGenerator pg{ card }; pg; ++pg) {
         if (QLatin1String{ pg.property().name() }.endsWith(
@@ -201,6 +208,7 @@ bool DBLink::storeToDB(const ProviderVector &providers) const
   db.commit();
   return true;
 }
+
 void DBLink::dropAll() const
 {
   auto db= getDb();
@@ -213,9 +221,14 @@ void DBLink::dropAll() const
   db.commit();
   exec(QStringLiteral("VACUUM"), db);
 }
+
 ProviderVector DBLink::loadFromDB() const
 {
-  assert(isValid());
+#ifndef NDEBUG
+  if (!isValid()) {
+    LOG_Error_DBINVALID
+  }
+#endif
 
   auto sql= exec(QStringLiteral(
       "SELECT "
@@ -252,17 +265,14 @@ ProviderVector DBLink::loadFromDB() const
       for (PropertyGenerator pg(dataRet.back()); count < 4 && pg;
            ++pg, ++count) {
         pg.write(sql.value(count));
-//        qDebug() << "write prop Provider:" << pg.property().name() << pg.read() << sql.value(count);
       }
     }
 
-    int count = 4;
-     dataRet.back().cards.push_back({});
-    auto &card = dataRet.back().cards.back();
-    for(PropertyGenerator pg{card}; count < 14 && pg; ++pg, ++ count)
-    {
+    int count= 4;
+    dataRet.back().cards.push_back({});
+    auto &card= dataRet.back().cards.back();
+    for (PropertyGenerator pg{ card }; count < 14 && pg; ++pg, ++count) {
       pg.write(sql.value(count));
-//      qDebug() << "write prop card:" << pg.property().name()<< pg.read() << sql.value(count);
     }
   } while (sql.next());
 

@@ -4,10 +4,11 @@
 
 #ifndef VEDISOFTINTERNSHIP_MODELPROVIDERCARD_HPP
 #define VEDISOFTINTERNSHIP_MODELPROVIDERCARD_HPP
-#include <QAbstractListModel>
 #include "src/deffwd.hpp"
+#include <QAbstractListModel>
 
 class Provider;
+
 class ModelProviderCard final: public QAbstractListModel {
   Q_OBJECT
 
@@ -22,10 +23,7 @@ public:
   data(const QModelIndex &index, int role= Qt::DisplayRole) const override;
 
   void changedAll();
-
-//  void changedOne(int index);
 };
-
 Q_DECLARE_METATYPE(ModelProviderCard *)
 
 #endif // VEDISOFTINTERNSHIP_MODELPROVIDERCARD_HPP

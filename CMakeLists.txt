@@ -2,13 +2,15 @@ cmake_minimum_required(VERSION 3.16)
 project(VedisoftInternship)
 set(CMAKE_CXX_STANDARD 17)
 set(QT_VERSION 5)
+
+find_package(Qt${QT_VERSION} REQUIRED COMPONENTS Core Quick Sql REQUIRED)
+#find_package(Threads REQUIRED)
+add_subdirectory("$ENV{CLP_DIR}/googletest" gtestBuild)
+add_subdirectory("${PROJECT_SOURCE_DIR}/3rdparty/spdlog" spdlogBuild)
+
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-find_package(Qt${QT_VERSION} REQUIRED COMPONENTS Core Quick Sql REQUIRED)
-find_package(Threads REQUIRED)
-add_subdirectory("$ENV{CLP_DIR}/googletest" gtestBuild)
 
 set(${PROJECT_NAME}_RESOURCES
         qml.qrc
@@ -23,28 +25,34 @@ add_library(${PROJECT_NAME}_impl STATIC
         src/ConfigLoader/ConfigCache.hpp
         src/entities/Card.hpp
         src/entities/Provider.hpp
-        src/MarshalJson.cpp src/MarshalJson.hpp
+        src/MarshalJson/MarshalJson.cpp src/MarshalJson/MarshalJson.hpp
         src/utils.hpp
         src/AppEngine.hpp src/AppEngine.cpp
         src/models/ModelProviderCard.hpp src/models/ModelProviderCard.cpp
         src/DBLink/DBLink.cpp src/DBLink/DBLink.hpp
         src/entities/Provider.hpp
-        $<$<CONFIG:Debug>:testValues/values.hpp>
         src/PropertyGenerator.hpp
-        src/entities/qHashSupport.cpp
+        src/entities/entitiesSupport.cpp
         src/DBLink/DBLinkExecutor.hpp
-        src/NetManager/NetManager.cpp src/NetManager/NetManager.hpp src/NetManager/NetManagerConfig.hpp)
+        src/NetManager/NetManager.cpp src/NetManager/NetManager.hpp src/NetManager/NetManagerConfig.hpp
+        src/MarshalJson/MarshalJsonUtils.hpp
+        $<$<CONFIG:Debug>:testValues/values.hpp>
+        $<$<CONFIG:Debug>:testValues/json.hpp>
+        )
 target_link_libraries(${PROJECT_NAME}_impl PUBLIC
-        Threads::Threads
-        "${PROJECT_SOURCE_DIR}/3rdparty/log4cpp/lib_nix/liblog4cpp.so"
+#        Threads::Threads
+#        "${PROJECT_SOURCE_DIR}/3rdparty/log4cpp/lib_nix/liblog4cpp.so"
         Qt${QT_VERSION}::Core Qt${QT_VERSION}::Quick Qt${QT_VERSION}::Sql
+        spdlog
         )
 target_include_directories(${PROJECT_NAME}_impl PUBLIC
         "${PROJECT_SOURCE_DIR}"
-        "${PROJECT_SOURCE_DIR}/3rdparty/log4cpp/include/"
+#        "${PROJECT_SOURCE_DIR}/3rdparty/log4cpp/include/"
+        "${PROJECT_SOURCE_DIR}/3rdparty/spdlog/include"
         )
 target_compile_definitions(${PROJECT_NAME}_impl
-        PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
+        PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>
+        )
 
 add_executable(${PROJECT_NAME}_main
         main.cpp
@@ -61,10 +69,10 @@ function(addTestSubproj NAME)
     set(mainFile ${SubprojDir}/${NAME}_main.cpp)
     file(MAKE_DIRECTORY ${SubprojDir})
     if (NOT EXISTS ${testFile})
-        configure_file(testTemplate.cpp.in ${testFile})
+        configure_file(cmakeTemplates/testTemplate.cpp.in ${testFile})
     endif ()
     if (NOT EXISTS ${mainFile})
-        configure_file(testMainFileTemplate.cpp.in ${mainFile})
+        configure_file(cmakeTemplates/testMainFileTemplate.cpp.in ${mainFile})
     endif ()
     add_executable(${NAME}_test
             ${testFile}
@@ -88,7 +96,7 @@ function(addTouchSubproj NAME)
     set(touchMainFile ${SubprojDir}/${NAME}_touch.cpp)
     file(MAKE_DIRECTORY ${SubprojDir})
     if (NOT EXISTS ${touchMainFile})
-        configure_file(touchTemplate.cpp.in ${touchMainFile})
+        configure_file(cmakeTemplates/touchTemplate.cpp.in ${touchMainFile})
     endif ()
     add_executable(${NAME}_touch
             ${touchMainFile}
@@ -103,4 +111,5 @@ function(addTouchSubproj NAME)
 endfunction()
 
 addTouchSubproj(DB)
-addTouchSubproj(PropertiesGenerator)
+addTouchSubproj(Logger)
+addTouchSubproj(Json)

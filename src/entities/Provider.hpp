@@ -16,17 +16,11 @@ class Provider {
 
 public:
   uint id DEBUG_INITNULL(std::numeric_limits<uint>::max());
-  QString title DEUBG_INITNULLSTR, image_url DEUBG_INITNULLSTR;
+  QString title DEUBG_INITNULLSTR;
+  QString image_url DEUBG_INITNULLSTR;
   QVector<Card> cards;
 
-  QVariantList cardsVariantList() const
-  {
-    QVariantList list;
-    for (auto const &card : cards) {
-      list.push_back(QVariant::fromValue(card));
-    }
-    return list;
-  }
+  QVariantList cardsVariantList() const;
 };
 Q_DECLARE_METATYPE(Provider)
 
