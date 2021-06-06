@@ -6,10 +6,6 @@
 #define VEDISOFTINTERNSHIP_UTILS_HPP
 #include <utility>
 
-#ifndef NDBUG
-  #include <QDebug>
-#endif
-
 template<class T, class U= T>
 constexpr T exchange(T &obj, U &&new_value)
 {

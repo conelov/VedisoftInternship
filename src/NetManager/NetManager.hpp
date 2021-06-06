@@ -15,13 +15,6 @@ class NetManager final: public QObject {
   Q_OBJECT
 
 public:
-  enum Errc : quint8
-  {
-    NoError,
-    SomeError,
-    count
-  };
-
   static void loadState(NetManagerConfig const &state);
 
 private:
@@ -35,7 +28,7 @@ public:
 
 signals:
   void postMinimal(QByteArray providers) const;
-  void error(NetManager::Errc) const;
+  void error( QString msg) const;
 };
 
 #endif // VEDISOFTINTERNSHIP_NETMANAGER_HPP

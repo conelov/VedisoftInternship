@@ -9,8 +9,6 @@
 #include <QCoreApplication>
 #include <QSettings>
 
-#include <QDebug>
-
 namespace
 {
 auto constexpr appBuildType=
@@ -66,7 +64,6 @@ ConfigCache ConfigLoader::load()
 
   setting.beginGroup(QStringLiteral(TO_LITERAL(NetManager)));
   for (PropertyGenerator pg(confArg.netManager); pg; ++pg) {
-    qDebug() << pg.property().name() << setting.value(pg.property().name());
     pg.write(setting.value(pg.property().name()));
   }
   setting.endGroup();

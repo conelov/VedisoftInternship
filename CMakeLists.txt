@@ -40,14 +40,11 @@ add_library(${PROJECT_NAME}_impl STATIC
         $<$<CONFIG:Debug>:testValues/json.hpp>
         )
 target_link_libraries(${PROJECT_NAME}_impl PUBLIC
-#        Threads::Threads
-#        "${PROJECT_SOURCE_DIR}/3rdparty/log4cpp/lib_nix/liblog4cpp.so"
         Qt${QT_VERSION}::Core Qt${QT_VERSION}::Quick Qt${QT_VERSION}::Sql
         spdlog
         )
 target_include_directories(${PROJECT_NAME}_impl PUBLIC
         "${PROJECT_SOURCE_DIR}"
-#        "${PROJECT_SOURCE_DIR}/3rdparty/log4cpp/include/"
         "${PROJECT_SOURCE_DIR}/3rdparty/spdlog/include"
         )
 target_compile_definitions(${PROJECT_NAME}_impl
@@ -61,7 +58,6 @@ add_executable(${PROJECT_NAME}_main
 target_link_libraries(${PROJECT_NAME}_main PUBLIC
         ${PROJECT_NAME}_impl
         )
-
 
 function(addTestSubproj NAME)
     set(SubprojDir "${PROJECT_SOURCE_DIR}/tests/${NAME}")

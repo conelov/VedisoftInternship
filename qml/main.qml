@@ -9,6 +9,8 @@ Window {
     visible: true
     width: 640
     height: 480
+    minimumWidth: 100
+    minimumHeight: minimumWidth
     title: qsTr("Card test")
 
     property int providerTextPointSize: 16
@@ -16,7 +18,16 @@ Window {
     property int cardHeight: 185
     property int cardWidth: 200
 
+    BusyIndicator{
+        id: busyIndicator
+        anchors.centerIn: parent
+        height: Math.min(root.width,root.height) / 4
+        width: height
+        running: true
+    }
+
     ListView {
+        id: providerList
         anchors.fill: parent
         ScrollBar.vertical: ScrollBar{}
 
@@ -86,5 +97,22 @@ Window {
                 }
             }
         }
+    }
+
+    ErrorSplash{
+        id: errorSplash
+        anchors.fill: parent
+    }
+
+    Connections{
+        target: app
+        onError: {
+            busyIndicator.running = false
+            errorSplash.open(msg);
+        }
+    }
+    Connections{
+        target: app.pcModel
+        onLayoutChanged : busyIndicator.running = false
     }
 }

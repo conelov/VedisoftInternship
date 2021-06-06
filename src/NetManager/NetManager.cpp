@@ -1,11 +1,11 @@
 //
 // Created by dym on 31.05.2021.
 //
-
 #include "NetManager.hpp"
 #include "NetManagerConfig.hpp"
 #include "src/Logger/Logger.hpp"
 #include "src/entities/Card.hpp"
+#include "src/utils.hpp"
 #include <QNetworkReply>
 
 namespace
@@ -34,11 +34,13 @@ void NetManager::getMinimal()
       this,
       [this, reply]
       {
+        InvokeOnDestruct destruct{ [reply] { reply->deleteLater(); } };
         if (reply->error() != QNetworkReply::NoError) {
           LOG_Warning << "Network request execution error"
                       << reply->errorString();
+          emit error(reply->errorString());
+          return;
         }
         emit postMinimal(reply->readAll());
-        reply->deleteLater();
       });
 }

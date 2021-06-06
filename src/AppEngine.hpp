@@ -28,6 +28,9 @@ public:
 private slots:
   void netMinimalHandler(QByteArray sourceData);
   void afterStartHandler() const;
+
+signals:
+  void error(QString msg);
 };
 
 #endif // VEDISOFTINTERNSHIP_APPENGINE_HPP

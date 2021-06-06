@@ -2,16 +2,26 @@ QT += quick sql network
 
 CONFIG += c++17
 
-# The following define makes your compiler emit warnings if you use
-# any Qt feature that has been marked deprecated (the exact warnings
-# depend on your compiler). Refer to the documentation for the
-# deprecated API to know how to port your code away from it.
-DEFINES += QT_DEPRECATED_WARNINGS
-
-# You can also make your code fail to compile if it uses deprecated APIs.
+# You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
-# You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+
+DESTDIR = $$PWD/bin
+
+INCLUDEPATH = $$PWD/3rdparty/spdlog/include
+
+SOURCES += \
+        main.cpp \
+        src/AppEngine.cpp \
+        src/ConfigLoader/ConfigLoader.cpp \
+        src/DBLink/DBLink.cpp \
+        src/Logger/Logger.cpp \
+        src/MarshalJson/MarshalJson.cpp \
+        src/NetManager/NetManager.cpp \
+        src/entities/entitiesSupport.cpp \
+        src/models/ModelProviderCard.cpp
+
+RESOURCES += qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -24,12 +34,8 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-DESTDIR = $$PWD/bin
-
-RESOURCES += \
-    qml.qrc
-
-INCLUDEPATH += $$PWD/3rdparty/spdlog/include
+DISTFILES += \
+    3rdparty/spdlog/include/spdlog/fmt/bundled/LICENSE.rst
 
 HEADERS += \
     3rdparty/spdlog/include/spdlog/async.h \
@@ -139,14 +145,3 @@ HEADERS += \
     src/entities/Provider.hpp \
     src/models/ModelProviderCard.hpp \
     src/utils.hpp
-
-SOURCES += \
-    main.cpp \
-    src/AppEngine.cpp \
-    src/ConfigLoader/ConfigLoader.cpp \
-    src/DBLink/DBLink.cpp \
-    src/Logger/Logger.cpp \
-    src/MarshalJson/MarshalJson.cpp \
-    src/NetManager/NetManager.cpp \
-    src/entities/entitiesSupport.cpp \
-    src/models/ModelProviderCard.cpp

@@ -39,8 +39,8 @@ public:
   QString description DEUBG_INITNULLSTR;
   QString redeem_url DEUBG_INITNULLSTR;
 
-  QString creditStr() const;
-  QString pointStr() const;
+  Q_INVOKABLE QString creditStr() const;
+  Q_INVOKABLE QString pointStr() const;
 };
 Q_DECLARE_METATYPE(Card)
 

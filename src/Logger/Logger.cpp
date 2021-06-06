@@ -22,7 +22,7 @@ spdlog::level::level_enum lvlToSpdlogLvl(Logger::Level const lvl)
   case Logger::Info: return spdLvl ::info;
   case Logger::Warninig: return spdLvl::warn;
   case Logger::Error: return spdLvl ::err;
-  default: assert(false); /// suppression warning
+  default: assert(false); return {};    /// suppression warning
   }
 }
 } // namespace
@@ -47,7 +47,6 @@ Logger::Logger(
   /// Init lib-logger
   auto console_sink= std::make_shared<spdlog::sinks::stdout_color_sink_st>();
   console_sink->set_level(lvlToSpdlogLvl(_config.levelConsole));
-//  console_sink->set_pattern("[multi_sink_example] [%^%l%$] %v");
 
   auto file_sink= std::make_shared<spdlog::sinks::basic_file_sink_st>(
       (QCoreApplication::applicationDirPath() + QChar('/') +

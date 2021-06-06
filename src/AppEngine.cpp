@@ -28,6 +28,11 @@ AppEngine::AppEngine()
       &NetManager::postMinimal,
       this,
       &AppEngine::netMinimalHandler);
+  QObject::connect(
+      _net.get(),
+      &NetManager::error,
+      this,
+      &AppEngine::error);
 
   QTimer::singleShot(0, this, &AppEngine::afterStartHandler);
 }
