@@ -9,6 +9,7 @@
 #include <qobjectdefs.h>
 
 class LoggerConfig;
+
 class Logger {
   Q_GADGET
 

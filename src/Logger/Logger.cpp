@@ -35,7 +35,7 @@ void Logger::loadState(const LoggerConfig &state)
 
 Logger::Logger(
     decltype(_func) file, decltype(_func) func, uint line, Logger::Level lvl)
-    : _logAny{ lvl >= _config.logFileName || lvl >= _config.levelConsole }
+    : _logAny{ lvl >= _config.levelFile|| lvl >= _config.levelConsole }
     , _lvl{ lvl }
     , _line{ line }
     , _file{ file }
@@ -45,11 +45,11 @@ Logger::Logger(
     return;
 
   /// Init lib-logger
-  auto console_sink= std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+  auto console_sink= std::make_shared<spdlog::sinks::stdout_color_sink_st>();
   console_sink->set_level(lvlToSpdlogLvl(_config.levelConsole));
-  console_sink->set_pattern("[multi_sink_example] [%^%l%$] %v");
+//  console_sink->set_pattern("[multi_sink_example] [%^%l%$] %v");
 
-  auto file_sink= std::make_shared<spdlog::sinks::basic_file_sink_mt>(
+  auto file_sink= std::make_shared<spdlog::sinks::basic_file_sink_st>(
       (QCoreApplication::applicationDirPath() + QChar('/') +
        _config.logFileName)
           .toStdString(),
@@ -57,8 +57,9 @@ Logger::Logger(
   file_sink->set_level(lvlToSpdlogLvl(_config.levelFile));
 
   _log.reset(new spdlog::logger(
-      "multiLog", { std::move(console_sink), std::move(file_sink) }));
+      "generalLog", { std::move(console_sink), std::move(file_sink) }));
   _log->set_level(spdlog::level::trace); /// Because trace is minimal level
+  _log->set_pattern("[%R][%l]: %v");
 }
 
 Logger::~Logger()
@@ -68,6 +69,6 @@ Logger::~Logger()
 
   _log->log(
       lvlToSpdlogLvl(_lvl),
-      std::string(_file) + std::string(_func) +
+      std::string(_file) + ' ' + std::string(_func) + ": " +
           _messages.join(_config.separatorMessages).toStdString());
 }

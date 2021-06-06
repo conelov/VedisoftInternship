@@ -9,6 +9,8 @@
 #include <QCoreApplication>
 #include <QSettings>
 
+#include <QDebug>
+
 namespace
 {
 auto constexpr appBuildType=
@@ -50,12 +52,21 @@ ConfigCache ConfigLoader::load()
 
   setting.beginGroup(QStringLiteral(TO_LITERAL(Logger)));
   for (PropertyGenerator pg{ confArg.logger }; pg; ++pg) {
+    /// TODO: exchange PropertyGenerator
+    auto const propName= QLatin1String{ pg.property().name() };
+    if (propName == QLatin1String{ "levelFile" } ||
+        propName == QLatin1String{ "levelConsole" }) {
+      pg.write(setting.value(pg.property().name())
+                   .value<std::underlying_type_t<Logger::Level>>());
+      continue;
+    }
     pg.write(setting.value(pg.property().name()));
   }
   setting.endGroup();
 
   setting.beginGroup(QStringLiteral(TO_LITERAL(NetManager)));
   for (PropertyGenerator pg(confArg.netManager); pg; ++pg) {
+    qDebug() << pg.property().name() << setting.value(pg.property().name());
     pg.write(setting.value(pg.property().name()));
   }
   setting.endGroup();
