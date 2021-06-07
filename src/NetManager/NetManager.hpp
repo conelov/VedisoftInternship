@@ -11,24 +11,25 @@ class QNetworkAccessManager;
 class QNetworkReply;
 class NetManagerConfig;
 
-class NetManager final: public QObject {
-  Q_OBJECT
+class NetManager final : public QObject
+{
+    Q_OBJECT
 
 public:
-  static void loadState(NetManagerConfig const &state);
+    static void loadState(NetManagerConfig const &state);
 
 private:
-  QScopedPointer<QNetworkAccessManager> _manager;
+    QScopedPointer<QNetworkAccessManager> _manager;
 
 public:
-  ~NetManager() override;
-  NetManager();
+    ~NetManager() override;
+    NetManager();
 
-  void getMinimal();
+    void getMinimal();
 
 signals:
-  void postMinimal(QByteArray providers) const;
-  void error( QString msg) const;
+    void postMinimal(QByteArray providers) const;
+    void error(QString msg) const;
 };
 
 #endif // VEDISOFTINTERNSHIP_NETMANAGER_HPP

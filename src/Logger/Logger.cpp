@@ -9,65 +9,66 @@
 #include "src/Logger/LoggerConfig.hpp"
 #include <QCoreApplication>
 
-namespace
-{
-LoggerConfig _config= configDefault::logger;
+namespace {
+LoggerConfig _config = configDefault::logger;
 QScopedPointer<spdlog::logger> _log;
 
 spdlog::level::level_enum lvlToSpdlogLvl(Logger::Level const lvl)
 {
-  using spdLvl= spdlog::level::level_enum;
-  switch (lvl) {
-  case Logger::Debug: return spdLvl ::debug;
-  case Logger::Info: return spdLvl ::info;
-  case Logger::Warninig: return spdLvl::warn;
-  case Logger::Error: return spdLvl ::err;
-  default: assert(false); return {};    /// suppression warning
-  }
+    using spdLvl = spdlog::level::level_enum;
+    switch (lvl) {
+    case Logger::Debug:
+        return spdLvl ::debug;
+    case Logger::Info:
+        return spdLvl ::info;
+    case Logger::Warninig:
+        return spdLvl::warn;
+    case Logger::Error:
+        return spdLvl ::err;
+    default:
+        LOG_Error << "unknown log level when converting";
+        return {};
+    }
 }
 } // namespace
 
 void Logger::loadState(const LoggerConfig &state)
 {
-  _config= state;
-  _log.reset();
+    _config = state;
+    _log.reset();
 }
 
-Logger::Logger(
-    decltype(_func) file, decltype(_func) func, uint line, Logger::Level lvl)
-    : _logAny{ lvl >= _config.levelFile|| lvl >= _config.levelConsole }
-    , _lvl{ lvl }
-    , _line{ line }
-    , _file{ file }
-    , _func{ func }
+Logger::Logger(decltype(_func) file, decltype(_func) func, uint line, Logger::Level lvl)
+    : _logAny { lvl >= _config.levelFile || lvl >= _config.levelConsole }
+    , _lvl { lvl }
+    , _line { line }
+    , _file { file }
+    , _func { func }
 {
-  if (!(_logAny && !_log))
-    return;
+    if (!(_logAny && !_log))
+        return;
 
-  /// Init lib-logger
-  auto console_sink= std::make_shared<spdlog::sinks::stdout_color_sink_st>();
-  console_sink->set_level(lvlToSpdlogLvl(_config.levelConsole));
+    /// Init lib-logger
+    auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_st>();
+    console_sink->set_level(lvlToSpdlogLvl(_config.levelConsole));
 
-  auto file_sink= std::make_shared<spdlog::sinks::basic_file_sink_st>(
-      (QCoreApplication::applicationDirPath() + QChar('/') +
-       _config.logFileName)
-          .toStdString(),
-      false);
-  file_sink->set_level(lvlToSpdlogLvl(_config.levelFile));
+    auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_st>(
+            (QCoreApplication::applicationDirPath() + QChar('/') + _config.logFileName)
+                    .toStdString(),
+            false);
+    file_sink->set_level(lvlToSpdlogLvl(_config.levelFile));
 
-  _log.reset(new spdlog::logger(
-      "generalLog", { std::move(console_sink), std::move(file_sink) }));
-  _log->set_level(spdlog::level::trace); /// Because trace is minimal level
-  _log->set_pattern("[%R][%l]: %v");
+    _log.reset(new spdlog::logger("generalLog", { std::move(console_sink), std::move(file_sink) }));
+    _log->set_level(spdlog::level::trace); /// Because trace is minimal level
+    _log->set_pattern("[%R][%l]: %v");
 }
 
 Logger::~Logger()
 {
-  if (!_logAny)
-    return;
+    if (!_logAny)
+        return;
 
-  _log->log(
-      lvlToSpdlogLvl(_lvl),
-      std::string(_file) + ' ' + std::string(_func) + ": " +
-          _messages.join(_config.separatorMessages).toStdString());
+    _log->log(lvlToSpdlogLvl(_lvl),
+              std::string(_file) + ' ' + std::string(_func) + ": "
+                      + _messages.join(_config.separatorMessages).toStdString());
 }

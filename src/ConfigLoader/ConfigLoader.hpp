@@ -9,10 +9,12 @@
 class QString;
 class ConfigCache;
 
-class ConfigLoader {
+class ConfigLoader
+{
 public:
-  inline static QString configFileName= QStringLiteral("config.ini");
-  static ConfigCache load();
+    inline static QString configFileName = QStringLiteral("config.ini");
+
+    static ConfigCache load();
 };
 
 #endif // VEDISOFTINTERNSHIP_CONFIGLOADER_HPP

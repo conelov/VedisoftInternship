@@ -10,37 +10,37 @@
 
 auto splitTitle(QStringRef sourceStr)
 {
-  {
-    auto const begin= sourceStr.indexOf('$');
-    if (begin == -1) {
-      LOG_Warning << QStringLiteral("not found $ sign");
+    {
+        auto const begin = sourceStr.indexOf('$');
+        if (begin == -1) {
+            LOG_Warning << QStringLiteral("not found $ sign");
+        }
+        sourceStr = sourceStr.mid(begin + 1);
     }
-    sourceStr= sourceStr.mid(begin + 1);
-  }
-  uint cost;
-  {
-    auto const begin= sourceStr.indexOf(' ');
-    if (begin == -1) {
-      LOG_Warning << QStringLiteral("no separating space found between number and title");
+    uint cost;
+    {
+        auto const begin = sourceStr.indexOf(' ');
+        if (begin == -1) {
+            LOG_Warning << QStringLiteral("no separating space found between number and title");
+        }
+        bool ok = false;
+        cost = sourceStr.left(begin).toUInt(&ok);
+        if (!ok) {
+            LOG_Warning << QStringLiteral("money number conversion error");
+        }
+        sourceStr = sourceStr.mid(begin + 1);
     }
-    bool ok= false;
-    cost   = sourceStr.left(begin).toUInt(&ok);
-    if (!ok) {
-      LOG_Warning << QStringLiteral("money number conversion error");
+    {
+        auto const begin = sourceStr.indexOf(' ');
+        if (begin != -1)
+            sourceStr = sourceStr.left(begin);
     }
-    sourceStr= sourceStr.mid(begin + 1);
-  }
-  {
-    auto const begin= sourceStr.indexOf(' ');
-    if (begin != -1)
-      sourceStr= sourceStr.left(begin);
-  }
-  return qMakePair(sourceStr.toString(), cost);
+    return qMakePair(sourceStr.toString(), cost);
 }
 
 auto splitTitle(QString const &sourceStr)
 {
-  return splitTitle(sourceStr.midRef(0));
+    return splitTitle(sourceStr.midRef(0));
 }
 
 #endif // VEDISOFTINTERNSHIP_MARSHALJSONUTILS_HPP

@@ -8,16 +8,15 @@
 
 class NetManagerConfig
 {
-  Q_GADGET
-  Q_PROPERTY(QUrl url MEMBER url)
+    Q_GADGET
+    Q_PROPERTY(QUrl url MEMBER url)
 
 public:
-  QUrl url;
+    QUrl url;
 };
 
-namespace configDefault
-{
-inline const NetManagerConfig netManager{ QStringLiteral(
-    "http://office.vedisoft.ru/files/providers.json") };
+namespace configDefault {
+inline const NetManagerConfig netManager { QStringLiteral(
+        "http://office.vedisoft.ru/files/providers.json") };
 }
 #endif // VEDISOFTINTERNSHIP_NETMANAGERCONFIG_HPP

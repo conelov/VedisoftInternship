@@ -7,30 +7,28 @@
 #include "deffwd.hpp"
 #include <QObject>
 
-class AppEngine final: public QObject {
-  Q_OBJECT
-  Q_PROPERTY(ModelProviderCard *pcModel READ pcModel CONSTANT)
+class AppEngine final : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(ModelProviderCard *pcModel READ pcModel CONSTANT)
 
-  const QScopedPointer<ConfigCache> _config;
-  const QScopedPointer<ProviderVector> _providers;
-  const QScopedPointer<ModelProviderCard> _providersModel;
-  const QScopedPointer<NetManager> _net;
+    const QScopedPointer<ConfigCache> _config;
+    const QScopedPointer<ProviderVector> _providers;
+    const QScopedPointer<ModelProviderCard> _providersModel;
+    const QScopedPointer<NetManager> _net;
 
 public:
-  ~AppEngine() override;
-  AppEngine();
+    ~AppEngine() override;
+    AppEngine();
 
-  Q_INVOKABLE ModelProviderCard *pcModel()
-  {
-    return _providersModel.get();
-  }
+    Q_INVOKABLE ModelProviderCard *pcModel() { return _providersModel.get(); }
 
 private slots:
-  void netMinimalHandler(QByteArray sourceData);
-  void afterStartHandler() const;
+    void netMinimalHandler(QByteArray sourceData);
+    void afterStartHandler() const;
 
 signals:
-  void error(QString msg);
+    void error(QString msg);
 };
 
 #endif // VEDISOFTINTERNSHIP_APPENGINE_HPP

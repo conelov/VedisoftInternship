@@ -6,21 +6,22 @@
 #define VEDISOFTINTERNSHIP_PROVIDER_HPP
 #include "Card.hpp"
 
-class Provider {
-  Q_GADGET
+class Provider
+{
+    Q_GADGET
 
-  Q_PROPERTY(uint id MEMBER id)
-  Q_PROPERTY(QString title MEMBER title)
-  Q_PROPERTY(QString image_url MEMBER image_url)
-  Q_PROPERTY(QVariantList cards READ cardsVariantList)
+    Q_PROPERTY(uint id MEMBER id)
+    Q_PROPERTY(QString title MEMBER title)
+    Q_PROPERTY(QString image_url MEMBER image_url)
+    Q_PROPERTY(QVariantList cards READ cardsVariantList)
 
 public:
-  uint id DEBUG_INITNULL(std::numeric_limits<uint>::max());
-  QString title DEUBG_INITNULLSTR;
-  QString image_url DEUBG_INITNULLSTR;
-  QVector<Card> cards;
+    uint id DEBUG_INITNULL(std::numeric_limits<uint>::max());
+    QString title DEUBG_INITNULLSTR;
+    QString image_url DEUBG_INITNULLSTR;
+    QVector<Card> cards;
 
-  QVariantList cardsVariantList() const;
+    QVariantList cardsVariantList() const;
 };
 Q_DECLARE_METATYPE(Provider)
 

@@ -7,10 +7,12 @@
 #include "src/Logger/LoggerConfig.hpp"
 #include "src/NetManager/NetManagerConfig.hpp"
 
-class ConfigCache {
+class ConfigCache
+{
 public:
-  LoggerConfig logger;
-  NetManagerConfig netManager;
+    LoggerConfig logger;
+
+    NetManagerConfig netManager;
 };
 
 #endif // VEDISOFTINTERNSHIP_CONFIGCACHE_HPP

@@ -9,20 +9,20 @@
 
 class Provider;
 
-class ModelProviderCard final: public QAbstractListModel {
-  Q_OBJECT
+class ModelProviderCard final : public QAbstractListModel
+{
+    Q_OBJECT
 
 public:
-  ProviderVector const &providers;
+    ProviderVector const &providers;
 
-  ModelProviderCard(decltype(providers) provs, QObject *parent= nullptr);
+    ModelProviderCard(decltype(providers) provs, QObject *parent = nullptr);
 
-  int rowCount(const QModelIndex &parent= QModelIndex()) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
-  QVariant
-  data(const QModelIndex &index, int role= Qt::DisplayRole) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-  void changedAll();
+    void changedAll();
 };
 Q_DECLARE_METATYPE(ModelProviderCard *)
 

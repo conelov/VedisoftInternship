@@ -6,26 +6,26 @@
 #define VEDISOFTINTERNSHIP_DEFFWD_HPP
 
 #ifdef TO_LITERAL
-  #error "^^ redefinition"
+#    error "^^ redefinition"
 #endif
 #define TO_LITERAL(x) #x
 
 #ifdef DEBUG_INITNULL
-  #error "^^ redefinition"
+#    error "^^ redefinition"
 #endif
 #ifndef NDEBUG
-  #define DEBUG_INITNULL(x) = x
+#    define DEBUG_INITNULL(x) = x
 #else
-  #define DEBUG_INITNULL(x)
+#    define DEBUG_INITNULL(x)
 #endif
 
 #ifdef DEUBG_NULLSTR
-  #error "^^ redefinition"
+#    error "^^ redefinition"
 #endif
 #define DEUBG_NULLSTR "NULL_STRING"
 
 #ifdef DEUBG_INITNULLSTR
-  #error "^^ redefinition"
+#    error "^^ redefinition"
 #endif
 #define DEUBG_INITNULLSTR DEBUG_INITNULL(DEUBG_NULLSTR)
 
@@ -38,5 +38,5 @@ class ConfigCache;
 class NetManager;
 template<typename T>
 class QVector;
-using ProviderVector= QVector<Provider>;
+using ProviderVector = QVector<Provider>;
 #endif // VEDISOFTINTERNSHIP_DEFFWD_HPP

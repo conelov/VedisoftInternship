@@ -11,44 +11,45 @@
 class QSqlDatabase;
 class QSqlQuery;
 
-class DBLink {
+class DBLink
+{
 public:
-  static QString const sqlDriveType;
-  static QString const dbFileName;
-  static QString const connectName;
+    static QString const sqlDriveType;
+    static QString const dbFileName;
+    static QString const connectName;
 
-  static void close();
+    static void close();
 
 private:
-  QString const dbFilePath;
+    QString const dbFilePath;
 
 public:
-  ~DBLink();
-  DBLink();
+    ~DBLink();
+    DBLink();
 
-  bool storeToDB(ProviderVector const &providers) const;
-  ProviderVector loadFromDB() const;
+    bool storeToDB(ProviderVector const &providers) const;
+    ProviderVector loadFromDB() const;
 
-  /// For unit-test
-  /// QSqlQuery type return
-  auto exec(const QString &query, QSqlDatabase &db) const;
-  auto exec(const QString &query) const;
+    /// For unit-test
+    /// QSqlQuery type return
+    auto exec(const QString &query, QSqlDatabase &db) const;
+    auto exec(const QString &query) const;
 
-  void exec(QSqlQuery &sql) const;
-  void exec(QSqlQuery &sql, const QString &query) const;
+    void exec(QSqlQuery &sql) const;
+    void exec(QSqlQuery &sql, const QString &query) const;
 
-  /// QSqlDatabase type return
-  auto getDb() const;
+    /// QSqlDatabase type return
+    auto getDb() const;
 
-  /// val or null
-  QPair<bool, uint> getDBHash() const;
+    /// val or null
+    QPair<bool, uint> getDBHash() const;
 
 private:
-  void init() const;
+    void init() const;
 
-  bool isValid() const;
+    bool isValid() const;
 
-  void dropAll() const;
+    void dropAll() const;
 };
 
 #endif // VEDISOFTINTERNSHIP_DBLINK_HPP

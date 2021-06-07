@@ -9,9 +9,10 @@
 class Provider;
 class QJsonDocument;
 
-class MarshalJson {
+class MarshalJson
+{
 public:
-  static QVector<Provider> deserialize(QJsonDocument const & jsonIn);
+    static QVector<Provider> deserialize(QJsonDocument const &jsonIn);
 };
 
 #endif // VEDISOFTINTERNSHIP_MARSHALJSON_HPP
