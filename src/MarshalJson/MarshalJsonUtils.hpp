@@ -8,7 +8,7 @@
 #include <QPair>
 #include <QStringRef>
 
-auto splitTitle(QStringRef sourceStr)
+inline auto splitTitle(QStringRef sourceStr)
 {
     {
         auto const begin = sourceStr.indexOf('$');
@@ -38,7 +38,7 @@ auto splitTitle(QStringRef sourceStr)
     return qMakePair(sourceStr.toString(), cost);
 }
 
-auto splitTitle(QString const &sourceStr)
+inline auto splitTitle(QString const &sourceStr)
 {
     return splitTitle(sourceStr.midRef(0));
 }

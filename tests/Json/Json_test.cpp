@@ -2,27 +2,10 @@
 #include "src/entities/Provider.hpp"
 #include <gtest/gtest.h>
 
-namespace
-{
-static QJsonDocument const jsonDocumentSource= []
-{
-  QJsonDocument jsonDocument;
-  QByteArray data;
-  {
-    QFile file("../fileInput/jsonSrcAdvanced.json");
-    assert(file.open(QIODevice::ReadOnly | QIODevice::Text));
-    data= file.readAll();
-  }
-  QJsonParseError errorPtr{};
-  jsonDocument= QJsonDocument::fromJson(data, &errorPtr);
-  assert(errorPtr.error == QJsonParseError::NoError);
-  return jsonDocument;
-}();
-}
-
 TEST(MarshalJson, _1)
 {
-  auto const deserial= MarshalJson::deserialize(jsonDocumentSource);
+    /// TODO: file input
+    auto const deserial= MarshalJson::deserialize(jsonDocumentSource);
   ASSERT_EQ(deserial.front().id, 1);
   ASSERT_EQ(deserial.front().title, QStringLiteral("Amazon.com"));
   ASSERT_EQ(

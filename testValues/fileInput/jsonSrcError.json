@@ -2,14 +2,13 @@
   "providers": [
     {
       "id": 2,
-      "title____": "Amazon.com",
+      "title": "Amazon.com",
       "image_url": "http://g-ec2.images-amazon.com/images/G/01/social/api-share/amazon_logo_500500.png",
       "gift_cards": [
         {
           "id": 1,
           "featured": false,
           "title": "$10 Amazon.com",
-          "credits": 8500,
           "image_url": "http://g-ec2.images-amazon.com/images/G/01/social/api-share/amazon_logo_500500.png",
           "codes_count": 101,
           "currency": "USD",

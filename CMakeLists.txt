@@ -4,17 +4,17 @@ set(CMAKE_CXX_STANDARD 17)
 set(QT_VERSION 5)
 
 find_package(Qt${QT_VERSION} REQUIRED COMPONENTS Core Quick Sql REQUIRED)
-#find_package(Threads REQUIRED)
 add_subdirectory("$ENV{CLP_DIR}/googletest" gtestBuild)
 add_subdirectory("${PROJECT_SOURCE_DIR}/3rdparty/spdlog" spdlogBuild)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
 set(${PROJECT_NAME}_RESOURCES
         qml.qrc
         )
+
+configure_file(cmakeTemplates/deffwd_testValues.hpp.in "${PROJECT_SOURCE_DIR}/testValues/deffwd_testValues.hpp")
 
 add_library(${PROJECT_NAME}_impl STATIC
         ${${PROJECT_NAME}_RESOURCES}
@@ -38,6 +38,7 @@ add_library(${PROJECT_NAME}_impl STATIC
         src/MarshalJson/MarshalJsonUtils.hpp
         $<$<CONFIG:Debug>:testValues/values.hpp>
         $<$<CONFIG:Debug>:testValues/json.hpp>
+        $<$<CONFIG:Debug>:testValues/testValues_deffwd.hpp>
         )
 target_link_libraries(${PROJECT_NAME}_impl PUBLIC
         Qt${QT_VERSION}::Core Qt${QT_VERSION}::Quick Qt${QT_VERSION}::Sql

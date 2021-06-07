@@ -33,7 +33,7 @@ QJsonValue objExtractValue(QJsonObject const &obj, QString const &key)
     return MARSHALJSON_DESERIALIZE_VALUE(obj, key);
 }
 
-QVector<Provider> MarshalJson::deserialize(const QJsonDocument &jsonIn)
+ProviderVector  MarshalJson::deserialize(const QJsonDocument &jsonIn)
 {
     QVector<Provider> providers;
     auto const providers_j =

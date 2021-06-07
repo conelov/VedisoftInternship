@@ -5,6 +5,7 @@
 
 int main(int argc, char *argv[])
 {
+    /// TODO: file input
   QCoreApplication app(argc, argv);
   MarshalJson::deserialize(tstv::jsonDocumentSource);
 

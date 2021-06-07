@@ -10,6 +10,7 @@
 #include "src/NetManager/NetManager.hpp"
 #include "src/entities/Provider.hpp"
 #include "src/models/ModelProviderCard.hpp"
+#include "testValues/json.hpp"
 
 AppEngine::~AppEngine() = default;
 
@@ -36,12 +37,13 @@ void AppEngine::afterStartHandler() const
 
 void AppEngine::netMinimalHandler(QByteArray const sourceData)
 {
-    {
-        QJsonParseError errorPtr {};
-        *_providers = MarshalJson::deserialize(QJsonDocument::fromJson(sourceData, &errorPtr));
-        if (errorPtr.error != QJsonParseError::NoError) {
-            LOG_Error << "parsing json error:" << QString::number(errorPtr.error);
-        }
+    QJsonParseError errorPtr {};
+    /// TODO: return a stock argument
+    *_providers = MarshalJson::deserialize(
+            //            QJsonDocument::fromJson(sourceData, &errorPtr)
+            tstv::jsonDocumentSourceError);
+    if (errorPtr.error != QJsonParseError::NoError) {
+        LOG_Error << "parsing json error:" << QString::number(errorPtr.error);
     }
 
     DBLink dbLink;

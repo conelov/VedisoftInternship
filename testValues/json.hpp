@@ -4,25 +4,27 @@
 
 #ifndef VEDISOFTINTERNSHIP_JSON_HPP
 #define VEDISOFTINTERNSHIP_JSON_HPP
-#include <QJsonDocument>
+#include "deffwd_testValues.hpp"
 #include <QFile>
+#include <QJsonDocument>
 
-namespace tstv
-{
-QJsonDocument const jsonDocumentSource= []
-{
-  QJsonDocument jsonDocument;
-  QByteArray data;
-  {
-    QFile file("../fileInput/jsonSrc_error.json");
-    assert(file.open(QIODevice::ReadOnly | QIODevice::Text));
-    data= file.readAll();
-  }
-  QJsonParseError errorPtr{};
-  jsonDocument= QJsonDocument::fromJson(data, &errorPtr);
-  assert(errorPtr.error == QJsonParseError::NoError);
-  return jsonDocument;
-}();
+namespace tstv {
+auto const jsonDocumentSource = [](QString const name) {
+    QJsonDocument jsonDocument;
+    QByteArray data;
+    {
+        QFile file(PROJECT_SOURCE_DIR "/" + name);
+        assert(file.open(QIODevice::ReadOnly | QIODevice::Text));
+        data = file.readAll();
+    }
+    QJsonParseError errorPtr {};
+    jsonDocument = QJsonDocument::fromJson(data, &errorPtr);
+    assert(errorPtr.error == QJsonParseError::NoError);
+    return jsonDocument;
+};
+
+QJsonDocument const jsonDocumentSourceError = jsonDocumentSource("jsonSrcError.json");
+QJsonDocument const jsonDocumentSourceNet = jsonDocumentSource("jsonSrcNet.json");
 }
 
 #endif // VEDISOFTINTERNSHIP_JSON_HPP
