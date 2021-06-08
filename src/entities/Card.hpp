@@ -4,7 +4,7 @@
 
 #ifndef VEDISOFTINTERNSHIP_CARD_HPP
 #define VEDISOFTINTERNSHIP_CARD_HPP
-#include "src/deffwd.hpp"
+#include "src/constant.hpp"
 #include <QString>
 #include <QtCore>
 
@@ -13,10 +13,12 @@ class Card
     Q_GADGET
 
     Q_PROPERTY(bool featured MEMBER featured)
+
     Q_PROPERTY(uint id MEMBER id)
     Q_PROPERTY(uint codes_count MEMBER codes_count)
-    Q_PROPERTY(uint credit MEMBER credit)
-    Q_PROPERTY(uint point MEMBER point)
+
+    Q_PROPERTY(int credit MEMBER credit)
+    Q_PROPERTY(int point MEMBER point)
 
     Q_PROPERTY(QString title MEMBER title)
     Q_PROPERTY(QString image_url MEMBER image_url)
@@ -28,17 +30,19 @@ class Card
     Q_PROPERTY(QString pointStr READ pointStr)
 
 public:
-    bool featured DEBUG_INITNULL(false);
-    uint id DEBUG_INITNULL(std::numeric_limits<uint>::max());
-    uint credit DEBUG_INITNULL(std::numeric_limits<uint>::max());
-    uint point DEBUG_INITNULL(std::numeric_limits<uint>::max());
-    uint codes_count DEBUG_INITNULL(std::numeric_limits<uint>::max());
+    bool featured DEBUG_INITNULL(bool);
 
-    QString title DEUBG_INITNULLSTR;
-    QString image_url DEUBG_INITNULLSTR;
-    QString currency DEUBG_INITNULLSTR;
-    QString description DEUBG_INITNULLSTR;
-    QString redeem_url DEUBG_INITNULLSTR;
+    uint id DEBUG_INITNULL(uint);
+    uint codes_count DEBUG_INITNULL(uint);
+
+    int credit DEBUG_INITNULL(int);
+    int point DEBUG_INITNULL(int);
+
+    QString title DEBUG_INITNULL(QString);
+    QString image_url DEBUG_INITNULL(QString);
+    QString currency DEBUG_INITNULL(QString);
+    QString description DEBUG_INITNULL(QString);
+    QString redeem_url DEBUG_INITNULL(QString);
 
     Q_INVOKABLE QString creditStr() const;
     Q_INVOKABLE QString pointStr() const;
@@ -46,5 +50,7 @@ public:
 Q_DECLARE_METATYPE(Card)
 
 uint qHash(Card const &data);
+
+bool isValidForGui(Card const &card);
 
 #endif // VEDISOFTINTERNSHIP_CARD_HPP

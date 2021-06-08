@@ -10,24 +10,14 @@
 #endif
 #define TO_LITERAL(x) #x
 
-#ifdef DEBUG_INITNULL
+#ifdef DEBUG_INIT
 #    error "^^ redefinition"
 #endif
 #ifndef NDEBUG
-#    define DEBUG_INITNULL(x) = x
+#    define DEBUG_INIT(x) = x
 #else
-#    define DEBUG_INITNULL(x)
+#    define DEBUG_INIT(x)
 #endif
-
-#ifdef DEUBG_NULLSTR
-#    error "^^ redefinition"
-#endif
-#define DEUBG_NULLSTR "NULL_STRING"
-
-#ifdef DEUBG_INITNULLSTR
-#    error "^^ redefinition"
-#endif
-#define DEUBG_INITNULLSTR DEBUG_INITNULL(DEUBG_NULLSTR)
 
 class Provider;
 class Card;
@@ -36,7 +26,11 @@ class NetManager;
 class ModelProviderCard;
 class ConfigCache;
 class NetManager;
+
+class QString;
 template<typename T>
 class QVector;
+
 using ProviderVector = QVector<Provider>;
+
 #endif // VEDISOFTINTERNSHIP_DEFFWD_HPP

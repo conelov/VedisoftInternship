@@ -26,4 +26,9 @@ struct InvokeOnDestruct
     ~InvokeOnDestruct() { std::invoke(callback); }
 };
 
+inline bool isWhiteSpace(const QString & str)
+{
+    return QRegExp("\\s*").exactMatch(str);
+}
+
 #endif // VEDISOFTINTERNSHIP_UTILS_HPP

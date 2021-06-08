@@ -22,7 +22,7 @@ public:
     MarshalJson() = delete;
     MarshalJson(QJsonDocument const &jsonIn);
 
-    ProviderVector result() const;
+    ProviderVector &result();
 
     operator bool() const { return _errors.isEmpty(); }
 

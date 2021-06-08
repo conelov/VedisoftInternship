@@ -5,7 +5,12 @@ import QtGraphicalEffects 1.0
 import QtQuick.Dialogs 1.2
 import "qrc:/qml/entities"
 
-ApplicationWindow {
+Window {
+    property int providerTextPointSize: 16
+    property int marginBase: 10
+    property int cardHeight: 185
+    property int cardWidth: 200
+
     id: root
     visible: true
     width: 640
@@ -13,11 +18,6 @@ ApplicationWindow {
     minimumWidth: 100
     minimumHeight: minimumWidth
     title: qsTr("Card test")
-
-    property int providerTextPointSize: 16
-    property int marginBase: 10
-    property int cardHeight: 185
-    property int cardWidth: 200
 
     BusyIndicator{
         id: busyIndicator
@@ -87,6 +87,7 @@ ApplicationWindow {
                         point: cardData.pointStr
                         credit: cardData.creditStr
                         image_url: cardData.image_url
+                        tooltip: cardData.description
                     }
 
                     DropShadow {

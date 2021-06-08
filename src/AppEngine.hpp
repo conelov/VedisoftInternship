@@ -31,10 +31,6 @@ private slots:
 
 signals:
     void error(QString msg) const;
-
-private:
-    /// value or null
-    QPair<bool, ProviderVector> extractProvidersFromByte(QByteArray const &source) const;
 };
 
 #endif // VEDISOFTINTERNSHIP_APPENGINE_HPP

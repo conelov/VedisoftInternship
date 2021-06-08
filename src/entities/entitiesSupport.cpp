@@ -7,6 +7,7 @@
 #include "Card.hpp"
 #include "Provider.hpp"
 #include "src/PropertyGenerator.hpp"
+#include "src/utils.hpp"
 #include <QVariant>
 
 namespace {
@@ -17,10 +18,18 @@ inline uint qHashTemplate(T &&data)
     auto extract = [&pg, first = true]() mutable -> uint {
         for (; pg; ++pg) {
             auto const type = pg.property().type();
-            if (type != QVariant::Type::UInt)
-                continue;
-            first = false;
-            return qHash(pg.read().toUInt());
+            switch (type) {
+            default: continue;
+            case QVariant::Type::UInt:
+                first = false;
+                return qHash(pg.read().toUInt());
+            case QVariant::Type::Int:
+                first = false;
+                return qHash(pg.read().toInt());
+            case QVariant::Type::String:
+                first = false;
+                return qHash(pg.read().toString());
+            }
         }
         /// suppression warning
         assert(!first);
@@ -34,7 +43,8 @@ inline uint qHashTemplate(T &&data)
     return hash;
 }
 
-QString costToString(uint const cost)
+template<typename T>
+QString costToString(T && cost)
 {
     return QLocale {}.toString(static_cast<double>(cost), 'f', 2);
 }
@@ -71,6 +81,22 @@ QVariantList Provider::cardsVariantList() const
         list.push_back(QVariant::fromValue(card));
     }
     return list;
+}
+
+bool isValidForGui(Card const &card)
+{
+    auto const range = { card.credit, card.point };
+    return std::all_of(range.begin(), range.end(), [](auto const i) {
+        if (i > 1'000'000 || i < 0 || i == null_constant_v<decltype(i)>) {
+            return false;
+        }
+        return true;
+    });
+}
+
+bool isValidForGui(Provider const &provider)
+{
+    return !isWhiteSpace(provider.title);
 }
 
 #endif // VEDISOFTINTERNSHIP_QHASHSUPPORT_CPP

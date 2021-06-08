@@ -1,0 +1,166 @@
+{
+  "providers": [
+    {
+      "id": 4,
+      "title": "Sephora.com",
+      "image_url": "https://www.sephora.com/img/ufe/logo.svg",
+      "gift_cards": [
+        {
+          "id": 1000,
+          "featured": false,
+          "title": "$1000 Sephora.com",
+          "credits": 1000,
+          "image_url": "https://www.sephora.com/img/ufe/logo.svg",
+          "codes_count": 101,
+          "currency": "USD",
+          "description": "We Belong to Something Beautiful",
+          "redeem_url": "https://sephora.com"
+        },
+        {
+          "id": 1,
+          "featured": false,
+          "title": "$5001 Sephora.com",
+          "credits": 5001,
+          "image_url": "https://www.sephora.com/img/ufe/logo.svg",
+          "codes_count": 101,
+          "currency": "USD",
+          "description": "We Belong to Something Beautiful",
+          "redeem_url": "https://sephora.com"
+        },
+        {
+          "id": 43,
+          "featured": false,
+          "title": "$",
+          "credits": 43,
+          "image_url": "https://www.sephora.com/img/ufe/logo.svg",
+          "codes_count": 101,
+          "currency": "USD",
+          "description": "We Belong to Something Beautiful",
+          "redeem_url": "https://sephora.com"
+        },
+        {
+          "id": 1,
+          "featured": false,
+          "title": "$5001 Sephora.com",
+          "credits": 5001,
+          "image_url": "https://www.sephora.com/img/ufe/logo.svg",
+          "codes_count": 101,
+          "currency": "USD",
+          "description": "We Belong to Something Beautiful",
+          "redeem_url": "https://sephora.com"
+        },
+        {
+          "id": 10,
+          "featured": false,
+          "title": "$0 Sephora.com",
+          "credits": 90,
+          "image_url": "https://www.sephora.com/img/ufe/logo.svg",
+          "codes_count": 101,
+          "currency": "USD",
+          "description": "We Belong to Something Beautiful",
+          "redeem_url": "https://sephora.com"
+        },
+        {
+          "id": 2,
+          "featured": false,
+          "title": "$1000001 Sephora.com",
+          "credits": 5001,
+          "image_url": "https://www.sephora.com/img/ufe/logo.svg",
+          "codes_count": 101,
+          "currency": "USD",
+          "description": "We Belong to Something Beautiful",
+          "redeem_url": "https://sephora.com"
+        },
+        {
+          "id": 3,
+          "featured": false,
+          "title": "$30 Sephora.com",
+          "credits": -1,
+          "image_url": "https://www.sephora.com/img/ufe/logo.svg",
+          "codes_count": 101,
+          "currency": "USD",
+          "description": "We Belong to Something Beautiful",
+          "redeem_url": "https://sephora.com"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Sephora.com",
+      "image_url": "https://www.sephora.com/img/ufe/logo.svg",
+      "gift_cards": [
+        {
+          "id": 1000,
+          "featured": false,
+          "title": "$10001 Sephora.com",
+          "credits": 10001,
+          "image_url": "https://www.sephora.com/img/ufe/logo.svg",
+          "codes_count": 101,
+          "currency": "USD",
+          "description": "We Belong to Something Beautiful",
+          "redeem_url": "https://sephora.com"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Sephora.com",
+      "image_url": "https://www.sephora.com/img/ufe/logo.svg",
+      "gift_cards": []
+    },    {
+      "id": 6,
+      "title": "Sephora.com",
+      "image_url": "https://www.sephora.com/img/ufe/logo.svg",
+      "gift_cards": [
+        {
+          "id": 1000,
+          "featured": false,
+          "title": "$10002 Sephora.com",
+          "credits": -1,
+          "image_url": "https://www.sephora.com/img/ufe/logo.svg",
+          "codes_count": 101,
+          "currency": "USD",
+          "description": "We Belong to Something Beautiful",
+          "redeem_url": "https://sephora.com"
+        },{
+          "id": 1000,
+          "featured": false,
+          "title": "$10003 Sephora.com",
+          "credits": 1000,
+          "image_url": "https://www.sephora.com/img/ufe/logo.svg",
+          "codes_count": 101,
+          "currency": "USD",
+          "description": "We Belong to Something Beautiful",
+          "redeem_url": "https://sephora.com"
+        }
+      ]
+    },{
+      "id": 6,
+      "title": "Sephora.com",
+      "image_url": "https://www.sephora.com/img/ufe/logo.svg",
+      "gift_cards": [
+        {
+          "id": 10005,
+          "featured": false,
+          "title": "$10002 Sephora.com",
+          "credits": -1,
+          "image_url": "https://www.sephora.com/img/ufe/logo.svg",
+          "codes_count": 101,
+          "currency": "USD",
+          "description": "We Belong to Something Beautiful",
+          "redeem_url": "https://sephora.com"
+        },{
+          "id": 10006,
+          "featured": false,
+          "title": "$-1 Sephora.com",
+          "credits": 1000,
+          "image_url": "https://www.sephora.com/img/ufe/logo.svg",
+          "codes_count": 101,
+          "currency": "USD",
+          "description": "We Belong to Something Beautiful",
+          "redeem_url": "https://sephora.com"
+        }
+      ]
+    }
+  ]
+}

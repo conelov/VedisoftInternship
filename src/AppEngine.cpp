@@ -33,12 +33,19 @@ void AppEngine::afterInitAppHandler() const
 {
     _net->getMinimal();
 }
-
 void AppEngine::netMinimalHandler(QByteArray const sourceData)
 {
-    if (auto [ok, providers] = extractProvidersFromByte(sourceData); ok) {
-        *_providers = std::move(providers);
-    } else {
+    QJsonParseError errorPtr {};
+    auto const jsonDocument = QJsonDocument::fromJson(sourceData, &errorPtr);
+    if (errorPtr.error != QJsonParseError::NoError) {
+        LOG_Error << "parsing json system error:" << errorPtr.errorString();
+        return;
+    }
+    MarshalJson marshalJson(jsonDocument);
+    if (!marshalJson) {
+        auto const err = marshalJson.errorsList().join(';');
+        LOG_Error << "parsing json error:" << err;
+        emit error("parsing json error: " + err);
         return;
     }
 
@@ -46,21 +53,50 @@ void AppEngine::netMinimalHandler(QByteArray const sourceData)
     dbLink.storeToDB(*_providers);
     *_providers = dbLink.loadFromDB();
 
-    _providersModel->changedAll();
-}
+    /// validation for GUI
+    QVector<decltype(Provider::id)> bindId;
+    bindId.reserve(marshalJson.result().size());
+    /// Этот copy_if перемещает валидные и гарантирует strong порядок id у провайдеров
+    /// Перемещаем из MarshalJson.result если
+    std::copy_if(std::make_move_iterator(marshalJson.result().begin()),
+                 std::make_move_iterator(marshalJson.result().end()),
+                 std::back_inserter(*_providers), [&bindId](Provider const &p) {
+                     if (!isValidForGui(p))
+                         return false;
+                     /// id не встречался ранее
+                     if (std::find(bindId.cbegin(), bindId.cend(), p.id) != bindId.cend())
+                         return false;
+                     bindId.push_back(p.id);
+                     return true;
+                 });
+    std::sort(_providers->begin(), _providers->end(),
+              [](auto &&lhs, auto &&rhs) { return lhs.id < rhs.id; });
+    /// Валидация карт у провайдеров
+    for (auto &provider : *_providers) {
+        QVector<decltype(Card::id)> bindId;
+        bindId.reserve(provider.cards.size());
+        provider.cards.erase(
+                std::remove_if(provider.cards.begin(), provider.cards.end(),
+                               /// Удаляем карты если
+                               [&bindId](Card const &card) {
+                                   if (!isValidForGui(card))
+                                       return true;
+                                   /// id не встречался ранее
+                                   if (std::find(bindId.cbegin(), bindId.cend(), card.id)
+                                       != bindId.cend())
+                                       return true;
+                                   bindId.push_back(card.id);
+                                   return false;
+                               }),
+                provider.cards.end());
+        std::sort(provider.cards.begin(), provider.cards.end(),
+                  [](auto &&lhs, auto &&rhs) { return lhs.id < rhs.id; });
+    }
+    /// Удалить провайдеров без карт
+    _providers->erase(
+            std::remove_if(_providers->begin(), _providers->end(),
+                           [](Provider const &provider) { return provider.cards.isEmpty(); }),
+            _providers->end());
 
-QPair<bool, ProviderVector> AppEngine::extractProvidersFromByte(const QByteArray &source) const
-{
-    QJsonParseError errorPtr {};
-    auto const jsonDocument = QJsonDocument::fromJson(source, &errorPtr);
-    if (errorPtr.error != QJsonParseError::NoError) {
-        LOG_Error << "parsing json system error:" << errorPtr.errorString();
-        return { false, {} };
-    }
-    MarshalJson marshalJson(jsonDocument);
-    if (!marshalJson) {
-        emit error("parsing json error: " + marshalJson.errorsList().join(';'));
-        return { false, {} };
-    }
-    return { true, marshalJson.result() };
+    _providersModel->changedAll();
 }

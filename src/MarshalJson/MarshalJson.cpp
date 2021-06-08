@@ -53,13 +53,17 @@ MarshalJson::MarshalJson(const QJsonDocument &jsonIn)
         {
             auto const cards_j =
                     objExtractValue(provider1_j, QStringLiteral("gift_cards")).toArray();
+            if(cards_j.isEmpty()){
+                continue;
+            }
+
             provider1.cards.reserve(cards_j.size());
 
             for (auto it : cards_j) {
                 auto const card1_j = it.toObject();
                 Card card1;
 
-                card1.id = objExtractValue(provider1_j, QStringLiteral("id")).toInt();
+                card1.id = objExtractValue(card1_j, QStringLiteral("id")).toInt();
                 card1.featured = objExtractValue(card1_j, QStringLiteral("featured")).toBool();
                 {
                     auto [str, cost] = splitTitle(
@@ -67,7 +71,7 @@ MarshalJson::MarshalJson(const QJsonDocument &jsonIn)
                     card1.title = std::move(str);
                     card1.credit = cost;
                 }
-                card1.point = objExtractValue(card1_j, QStringLiteral("credits")).toInt();
+                card1.point = objExtractValue(card1_j, QStringLiteral("credits")).toInt(null_constant_v<decltype(Card::point)>);
                 card1.image_url = objExtractValue(card1_j, QStringLiteral("image_url")).toString();
                 card1.codes_count = objExtractValue(card1_j, QStringLiteral("codes_count")).toInt();
                 card1.currency = objExtractValue(card1_j, QStringLiteral("currency")).toInt();
@@ -83,7 +87,7 @@ MarshalJson::MarshalJson(const QJsonDocument &jsonIn)
         _providers.push_back(std::move(provider1));
     }
 }
-ProviderVector MarshalJson::result() const
+ProviderVector &MarshalJson::result()
 {
     return _providers;
 }

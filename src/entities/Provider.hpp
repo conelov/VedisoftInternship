@@ -16,9 +16,9 @@ class Provider
     Q_PROPERTY(QVariantList cards READ cardsVariantList)
 
 public:
-    uint id DEBUG_INITNULL(std::numeric_limits<uint>::max());
-    QString title DEUBG_INITNULLSTR;
-    QString image_url DEUBG_INITNULLSTR;
+    uint id DEBUG_INITNULL(uint);
+    QString title DEBUG_INITNULL(QString);
+    QString image_url DEBUG_INITNULL(QString);
     QVector<Card> cards;
 
     QVariantList cardsVariantList() const;
@@ -26,5 +26,7 @@ public:
 Q_DECLARE_METATYPE(Provider)
 
 uint qHash(Provider const &data);
+
+bool isValidForGui(Provider const &);
 
 #endif // VEDISOFTINTERNSHIP_PROVIDER_HPP

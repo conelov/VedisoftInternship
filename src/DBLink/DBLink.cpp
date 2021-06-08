@@ -83,6 +83,7 @@ DBLink::DBLink() : dbFilePath(QCoreApplication::applicationDirPath() + '/' + dbF
         QFile::remove(dbFilePath);
         init();
     }
+    /// redundant check
 #ifndef NDEBUG
     if (!isValid()) {
         LOG_Error_DBINVALID
@@ -124,6 +125,7 @@ QPair<bool, uint> DBLink::getDBHash() const
     QSqlQuery sql = exec(QStringLiteral("SELECT hash from " TABLE_LOG "; "));
 
 #ifndef NDEBUG
+    /// redundant check
     /// Check row count log table
     InvokeOnDestruct callBack { [&sql] {
         if (sql.next()) {
@@ -143,7 +145,8 @@ bool DBLink::storeToDB(const ProviderVector &providers) const
     auto const [dbHashExist, dbHash] = getDBHash();
     uint currentHash {};
 
-    if (dbHashExist && (currentHash = qHash(providers)) == dbHash)
+    if (dbHashExist &&
+        (currentHash = qHash(providers)) == dbHash)
         return false;
 
     dropAll();
@@ -214,6 +217,7 @@ void DBLink::dropAll() const
 ProviderVector DBLink::loadFromDB() const
 {
 #ifndef NDEBUG
+    /// redundant check
     if (!isValid()) {
         LOG_Error_DBINVALID
     }

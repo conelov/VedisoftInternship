@@ -29,6 +29,7 @@ auto const jsonDocumentSource = [](QString const name) {
 QJsonDocument const jsonDocumentSourceError = jsonDocumentSource("jsonSrcError.json");
 QJsonDocument const jsonDocumentSourceStd = jsonDocumentSource("jsonSrc.json");
 QJsonDocument const jsonDocumentSourceAdvanced = jsonDocumentSource("jsonSrcAdvanced.json");
+QJsonDocument const jsonDocumentSourceInvalid = jsonDocumentSource("jsonSrcInvalid.json");
 
 }
 

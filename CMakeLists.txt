@@ -39,7 +39,7 @@ add_library(${PROJECT_NAME}_impl STATIC
         $<$<CONFIG:Debug>:testValues/values.hpp>
         $<$<CONFIG:Debug>:testValues/json.hpp>
         $<$<CONFIG:Debug>:testValues/testValues_deffwd.hpp>
-        )
+        src/constant.hpp)
 target_link_libraries(${PROJECT_NAME}_impl PUBLIC
         Qt${QT_VERSION}::Core Qt${QT_VERSION}::Quick Qt${QT_VERSION}::Sql
         spdlog

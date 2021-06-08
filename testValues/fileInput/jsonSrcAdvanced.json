@@ -1,12 +1,10 @@
 {
-
   "providers": [
     {
       "id": 1,
       "title": "Amazon.com",
       "image_url": "http://g-ec2.images-amazon.com/images/G/01/social/api-share/amazon_logo_500500.png",
-      "gift_cards":
-      [
+      "gift_cards": [
         {
           "id": 1,
           "featured": false,
@@ -64,8 +62,7 @@
       "id": 3,
       "title": "AliExpress.com",
       "image_url": "http://ae01.alicdn.com/kf/H625cd629fe984c719391fc7289edb4a72.png",
-      "gift_cards":
-      [
+      "gift_cards": [
         {
           "id": 1,
           "featured": false,
