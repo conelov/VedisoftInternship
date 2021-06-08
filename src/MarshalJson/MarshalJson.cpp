@@ -8,6 +8,10 @@
 #include "src/entities/Card.hpp"
 #include "src/entities/Provider.hpp"
 
+namespace {
+auto const _errorPrefix_UndefinedKey = QStringLiteral("undefined key: ");
+}
+
 #if defined(MARSHALJSON_DESERIALIZE_CHECK) || defined(MARSHALJSON_DESERIALIZE_VALUE)
 #    error "^^ redefinition"
 #endif
@@ -16,11 +20,11 @@
 
 #ifdef MARSHALJSON_DESERIALIZE_CHECK
 #    define MARSHALJSON_DESERIALIZE_VALUE(source, key)                                             \
-        [&source, &key] {                                                                          \
+        [this, &source, &key] {                                                                    \
             auto val = source.value(key);                                                          \
             if (val.isUndefined()) {                                                               \
-                Logger { "deserialize", "MarshalJson", 0, Logger::Error }                          \
-                        << QStringLiteral("undefined key:") << key;                                \
+                _errors.push_back(_errorPrefix_UndefinedKey + key);                                \
+                Logger { "deserialize", "MarshalJson", 0, Logger::Error } << _errors.back();       \
             }                                                                                      \
             return val;                                                                            \
         }()
@@ -28,17 +32,16 @@
 #    define MARSHALJSON_DESERIALIZE_VALUE(source, key) source.value(key)
 #endif
 
-QJsonValue objExtractValue(QJsonObject const &obj, QString const &key)
+auto MarshalJson::objExtractValue(QJsonObject const &obj, QString const &key)
 {
     return MARSHALJSON_DESERIALIZE_VALUE(obj, key);
 }
 
-ProviderVector  MarshalJson::deserialize(const QJsonDocument &jsonIn)
+MarshalJson::MarshalJson(const QJsonDocument &jsonIn)
 {
-    QVector<Provider> providers;
     auto const providers_j =
             objExtractValue(jsonIn.object(), QStringLiteral("providers")).toArray();
-    providers.reserve(providers_j.size());
+    _providers.reserve(providers_j.size());
 
     for (auto it : providers_j) {
         auto const provider1_j = it.toObject();
@@ -77,8 +80,10 @@ ProviderVector  MarshalJson::deserialize(const QJsonDocument &jsonIn)
             }
         }
 
-        providers.push_back(std::move(provider1));
+        _providers.push_back(std::move(provider1));
     }
-
-    return providers;
+}
+ProviderVector MarshalJson::result() const
+{
+    return _providers;
 }

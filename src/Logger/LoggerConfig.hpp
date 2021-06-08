@@ -33,6 +33,6 @@ public:
 namespace configDefault {
 inline const LoggerConfig logger { LOGGER_LEVEL_INIT(Logger::Level::Warninig),
                                    LOGGER_LEVEL_INIT(Logger::Level::Error), ' ',
-                                   QStringLiteral("logApp_defaultName.txt") };
+                                   QStringLiteral("logApp.txt") };
 }
 #endif // VEDISOFTINTERNSHIP_LOGGERCONFIG_HPP

@@ -14,7 +14,10 @@ auto const jsonDocumentSource = [](QString const name) {
     QByteArray data;
     {
         QFile file(PROJECT_SOURCE_DIR "/" + name);
-        assert(file.open(QIODevice::ReadOnly | QIODevice::Text));
+        if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+            qDebug() << "file no open:" << PROJECT_SOURCE_DIR "/" + name;
+            assert(false);
+        }
         data = file.readAll();
     }
     QJsonParseError errorPtr {};
@@ -24,7 +27,9 @@ auto const jsonDocumentSource = [](QString const name) {
 };
 
 QJsonDocument const jsonDocumentSourceError = jsonDocumentSource("jsonSrcError.json");
-QJsonDocument const jsonDocumentSourceNet = jsonDocumentSource("jsonSrcNet.json");
+QJsonDocument const jsonDocumentSourceStd = jsonDocumentSource("jsonSrc.json");
+QJsonDocument const jsonDocumentSourceAdvanced = jsonDocumentSource("jsonSrcAdvanced.json");
+
 }
 
 #endif // VEDISOFTINTERNSHIP_JSON_HPP

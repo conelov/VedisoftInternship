@@ -11,7 +11,6 @@ class ConfigCache
 {
 public:
     LoggerConfig logger;
-
     NetManagerConfig netManager;
 };
 

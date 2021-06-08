@@ -8,6 +8,7 @@
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "src/Logger/LoggerConfig.hpp"
 #include <QCoreApplication>
+#include <QStringBuilder>
 
 namespace {
 LoggerConfig _config = configDefault::logger;
@@ -53,8 +54,8 @@ Logger::Logger(decltype(_func) file, decltype(_func) func, uint line, Logger::Le
     console_sink->set_level(lvlToSpdlogLvl(_config.levelConsole));
 
     auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_st>(
-            (QCoreApplication::applicationDirPath() + QChar('/') + _config.logFileName)
-                    .toStdString(),
+            (QCoreApplication::applicationDirPath() % '/' % _config.logFileName)
+                    .toLocal8Bit().toStdString(),
             false);
     file_sink->set_level(lvlToSpdlogLvl(_config.levelFile));
 
@@ -69,6 +70,8 @@ Logger::~Logger()
         return;
 
     _log->log(lvlToSpdlogLvl(_lvl),
-              std::string(_file) + ' ' + std::string(_func) + ": "
-                      + _messages.join(_config.separatorMessages).toStdString());
+              (QString(_file) % ' ' % QString(_func) % ' ' % QString::number(_line) % ": "
+               % _messages.join(_config.separatorMessages))
+                      .toLocal8Bit()
+                      .toStdString());
 }

@@ -23,12 +23,18 @@ public:
 
     Q_INVOKABLE ModelProviderCard *pcModel() { return _providersModel.get(); }
 
+public slots:
+    void afterInitAppHandler() const;
+
 private slots:
     void netMinimalHandler(QByteArray sourceData);
-    void afterStartHandler() const;
 
 signals:
-    void error(QString msg);
+    void error(QString msg) const;
+
+private:
+    /// value or null
+    QPair<bool, ProviderVector> extractProvidersFromByte(QByteArray const &source) const;
 };
 
 #endif // VEDISOFTINTERNSHIP_APPENGINE_HPP

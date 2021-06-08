@@ -8,7 +8,6 @@
         {
           "id": 1,
           "featured": false,
-          "title": "$10 Amazon.com",
           "image_url": "http://g-ec2.images-amazon.com/images/G/01/social/api-share/amazon_logo_500500.png",
           "codes_count": 101,
           "currency": "USD",

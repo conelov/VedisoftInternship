@@ -2,9 +2,10 @@ import QtQuick 2.12
 import QtQuick.Window 2.12
 import QtQuick.Controls 2.12
 import QtGraphicalEffects 1.0
+import QtQuick.Dialogs 1.2
 import "qrc:/qml/entities"
 
-Window {
+ApplicationWindow {
     id: root
     visible: true
     width: 640
@@ -26,10 +27,15 @@ Window {
         running: true
     }
 
+    ErrorDialog{
+        id: errorDialog
+    }
+
     ListView {
         id: providerList
         anchors.fill: parent
         ScrollBar.vertical: ScrollBar{}
+        visible: false
 
         model: app.pcModel
         delegate: lvVerticalListDelegate
@@ -99,20 +105,39 @@ Window {
         }
     }
 
-    ErrorSplash{
+    Rectangle{
         id: errorSplash
         anchors.fill: parent
+        color: "black"
+        opacity: 0.7
+        visible: false
     }
 
     Connections{
+        target: errorDialog
+        onAccepted: {
+            app.afterInitAppHandler();
+            errorSplash.visible = false
+        }
+        onRejected: {
+            busyIndicator.running = false
+            errorSplash.visible = false
+        }
+    }
+    Connections{
         target: app
         onError: {
-            busyIndicator.running = false
-            errorSplash.open(msg);
+            busyIndicator.running = true
+            errorSplash.visible = true
+            errorDialog.open(msg)
         }
     }
     Connections{
         target: app.pcModel
-        onLayoutChanged : busyIndicator.running = false
+        onLayoutChanged : {
+            busyIndicator.running = false
+            providerList.visible = true
+            errorSplash.visible = false
+        }
     }
 }

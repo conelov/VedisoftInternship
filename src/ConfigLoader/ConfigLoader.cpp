@@ -12,16 +12,15 @@
 namespace {
 auto constexpr appBuildType =
 #ifndef NDEBUG
-        1
-#else
         2
+#else
+        1
 #endif
         ;
 } // namespace
 
 ConfigCache ConfigLoader::load()
 {
-    ConfigCache confArg;
     QSettings setting(QCoreApplication::applicationDirPath() + QChar('/') + configFileName,
                       QSettings::Format::IniFormat);
 
@@ -32,37 +31,27 @@ ConfigCache ConfigLoader::load()
         setting.clear();
         setting.setValue(QStringLiteral(TO_LITERAL(appBuildType)), appBuildType);
 
-        setting.beginGroup(QStringLiteral(TO_LITERAL(Logger)));
         for (PropertyGenerator pg { configDefault::logger }; pg; ++pg) {
             setting.setValue(pg.property().name(), pg.read());
         }
-        setting.endGroup();
-
-        setting.beginGroup(QStringLiteral(TO_LITERAL(NetManager)));
         for (PropertyGenerator pg(configDefault::netManager); pg; ++pg) {
             setting.setValue(pg.property().name(), pg.read());
         }
-        setting.endGroup();
     }
 
-    setting.beginGroup(QStringLiteral(TO_LITERAL(Logger)));
+    ConfigCache confArg;
     for (PropertyGenerator pg { confArg.logger }; pg; ++pg) {
-        auto const propName = QLatin1String { pg.property().name() };
-        if (propName == QLatin1String { "levelFile" }
-            || propName == QLatin1String { "levelConsole" }) {
+        QLatin1String const propName { pg.property().name() };
+        if (propName == "levelFile" || propName == "levelConsole") {
             pg.write(setting.value(pg.property().name())
                              .value<std::underlying_type_t<Logger::Level>>());
             continue;
         }
         pg.write(setting.value(pg.property().name()));
     }
-    setting.endGroup();
-
-    setting.beginGroup(QStringLiteral(TO_LITERAL(NetManager)));
     for (PropertyGenerator pg(confArg.netManager); pg; ++pg) {
         pg.write(setting.value(pg.property().name()));
     }
-    setting.endGroup();
 
     setting.endGroup();
     return confArg;
