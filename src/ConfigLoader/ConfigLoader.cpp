@@ -7,52 +7,39 @@
 #include "src/PropertyGenerator.hpp"
 #include "src/deffwd.hpp"
 #include <QCoreApplication>
+#include <QFileInfo>
 #include <QSettings>
-
-namespace {
-auto constexpr appBuildType =
-#ifndef NDEBUG
-        2
-#else
-        1
-#endif
-        ;
-} // namespace
 
 ConfigCache ConfigLoader::load()
 {
-    QSettings setting(QCoreApplication::applicationDirPath() + QChar('/') + configFileName,
-                      QSettings::Format::IniFormat);
-
-    setting.beginGroup("appConfig");
+    QString const fileFullPath = QCoreApplication::applicationDirPath() + '/' + configFileName;
+    QSettings setting(fileFullPath, QSettings::Format::IniFormat);
 
     /// Init settings file
-    if (setting.value(QStringLiteral(TO_LITERAL(appBuildType)), 0).toUInt() != appBuildType) {
-        setting.clear();
-        setting.setValue(QStringLiteral(TO_LITERAL(appBuildType)), appBuildType);
+    if (!QFileInfo::exists(fileFullPath)) {
+        setting.setValue(QStringLiteral(TO_LITERAL(Logger) "/level"),
+                         QMetaEnum::fromType<Logger::Level>().valueToKey(
+                                 configDefault::logger.levelConsole));
+        setting.setValue(QStringLiteral(TO_LITERAL(Logger) "/logFileName"),
+                         configDefault::logger.logFileName);
 
-        for (PropertyGenerator pg { configDefault::logger }; pg; ++pg) {
-            setting.setValue(pg.property().name(), pg.read());
-        }
-        for (PropertyGenerator pg(configDefault::netManager); pg; ++pg) {
-            setting.setValue(pg.property().name(), pg.read());
-        }
+        setting.setValue(QStringLiteral(TO_LITERAL(NetManager) "/url"),
+                         configDefault::netManager.url.toString());
     }
 
     ConfigCache confArg;
-    for (PropertyGenerator pg { confArg.logger }; pg; ++pg) {
-        QLatin1String const propName { pg.property().name() };
-        if (propName == "levelFile" || propName == "levelConsole") {
-            pg.write(setting.value(pg.property().name())
-                             .value<std::underlying_type_t<Logger::Level>>());
-            continue;
-        }
-        pg.write(setting.value(pg.property().name()));
-    }
-    for (PropertyGenerator pg(confArg.netManager); pg; ++pg) {
-        pg.write(setting.value(pg.property().name()));
-    }
 
-    setting.endGroup();
+    confArg.logger.levelFile = confArg.logger.levelConsole =
+            static_cast<Logger::Level>(QMetaEnum::fromType<Logger::Level>().keyToValue(
+                    setting.value(QStringLiteral(TO_LITERAL(Logger) "/level"))
+                            .toString()
+                            .toStdString()
+                            .c_str()));
+    confArg.logger.logFileName =
+            setting.value(QStringLiteral(TO_LITERAL(Logger) "/logFileName")).toString();
+
+    confArg.netManager.url =
+            setting.value(QStringLiteral(TO_LITERAL(NetManager) "/url")).toString();
+
     return confArg;
 }
