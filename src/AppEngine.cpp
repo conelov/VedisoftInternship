@@ -10,6 +10,7 @@
 #include "src/NetManager/NetManager.hpp"
 #include "src/entities/Provider.hpp"
 #include "src/models/ModelProviderCard.hpp"
+#include "src/utils.hpp"
 
 AppEngine::~AppEngine() = default;
 
@@ -33,6 +34,7 @@ void AppEngine::afterInitAppHandler() const
 {
     _net->getMinimal();
 }
+
 void AppEngine::netMinimalHandler(QByteArray const sourceData)
 {
     QJsonParseError errorPtr {};
@@ -53,50 +55,47 @@ void AppEngine::netMinimalHandler(QByteArray const sourceData)
     dbLink.storeToDB(*_providers);
     *_providers = dbLink.loadFromDB();
 
-    /// validation for GUI
-    QVector<decltype(Provider::id)> bindId;
-    bindId.reserve(marshalJson.result().size());
-    /// Этот copy_if перемещает валидные и гарантирует strong порядок id у провайдеров
-    /// Перемещаем из MarshalJson.result если
-    std::copy_if(std::make_move_iterator(marshalJson.result().begin()),
-                 std::make_move_iterator(marshalJson.result().end()),
-                 std::back_inserter(*_providers), [&bindId](Provider const &p) {
-                     if (!isValidForGui(p))
-                         return false;
-                     /// id не встречался ранее
-                     if (std::find(bindId.cbegin(), bindId.cend(), p.id) != bindId.cend())
-                         return false;
-                     bindId.push_back(p.id);
-                     return true;
-                 });
-    std::sort(_providers->begin(), _providers->end(),
-              [](auto &&lhs, auto &&rhs) { return lhs.id < rhs.id; });
-    /// Валидация карт у провайдеров
-    for (auto &provider : *_providers) {
-        QVector<decltype(Card::id)> bindId;
-        bindId.reserve(provider.cards.size());
-        provider.cards.erase(
-                std::remove_if(provider.cards.begin(), provider.cards.end(),
-                               /// Удаляем карты если
-                               [&bindId](Card const &card) {
-                                   if (!isValidForGui(card))
-                                       return true;
-                                   /// id не встречался ранее
-                                   if (std::find(bindId.cbegin(), bindId.cend(), card.id)
-                                       != bindId.cend())
-                                       return true;
-                                   bindId.push_back(card.id);
-                                   return false;
-                               }),
-                provider.cards.end());
-        std::sort(provider.cards.begin(), provider.cards.end(),
-                  [](auto &&lhs, auto &&rhs) { return lhs.id < rhs.id; });
-    }
-    /// Удалить провайдеров без карт
-    _providers->erase(
-            std::remove_if(_providers->begin(), _providers->end(),
-                           [](Provider const &provider) { return provider.cards.isEmpty(); }),
-            _providers->end());
+    *_providers = validationForGui(std::move(marshalJson.result()));
 
     _providersModel->changedAll();
+}
+
+ProviderVector AppEngine::validationForGui(ProviderVector &&source)
+{
+    QVector<decltype(Provider::id)> bindId;
+    bindId.reserve(source.size());
+    ProviderVector result;
+    result.reserve(source.size());
+    for (auto &&provider : source) {
+        if (!isValidForGui(provider))
+            continue;
+        if (std::find(bindId.cbegin(), bindId.cend(), provider.id) != bindId.cend())
+            continue;
+        CardVector cardsValid = validationForGui(std::move(provider.cards));
+        if (cardsValid.isEmpty())
+            continue;
+        bindId.push_back(provider.id);
+        provider.cards = std::move(cardsValid);
+        result.push_back(std::move(provider));
+    }
+    std::sort(result.begin(), result.end(), lessIdComparator);
+    return result;
+}
+
+CardVector AppEngine::validationForGui(CardVector &&source)
+{
+    QVector<decltype(Provider::id)> bindId;
+    bindId.reserve(source.size());
+    CardVector result;
+    result.reserve(source.size());
+    for (auto &&card : source) {
+        if (!isValidForGui(card))
+            continue;
+        if (std::find(bindId.cbegin(), bindId.cend(), card.id) != bindId.cend())
+            continue;
+        bindId.push_back(card.id);
+        result.push_back(std::move(card));
+    }
+    std::sort(result.begin(), result.end(), lessIdComparator);
+    return result;
 }

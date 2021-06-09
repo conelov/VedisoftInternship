@@ -31,4 +31,6 @@ inline bool isWhiteSpace(const QString & str)
     return QRegExp("\\s*").exactMatch(str);
 }
 
+inline constexpr auto lessIdComparator = [](auto &&lhs, auto &&rhs) { return lhs.id < rhs.id; };
+
 #endif // VEDISOFTINTERNSHIP_UTILS_HPP

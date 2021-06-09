@@ -31,6 +31,7 @@ class QString;
 template<typename T>
 class QVector;
 
+using CardVector = QVector<Card>;
 using ProviderVector = QVector<Provider>;
 
 #endif // VEDISOFTINTERNSHIP_DEFFWD_HPP

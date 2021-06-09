@@ -12,6 +12,9 @@ class AppEngine final : public QObject
     Q_OBJECT
     Q_PROPERTY(ModelProviderCard *pcModel READ pcModel CONSTANT)
 
+    static ProviderVector validationForGui(ProviderVector && source);
+    static CardVector validationForGui(CardVector && source);
+
     const QScopedPointer<ConfigCache> _config;
     const QScopedPointer<ProviderVector> _providers;
     const QScopedPointer<ModelProviderCard> _providersModel;
@@ -31,6 +34,7 @@ private slots:
 
 signals:
     void error(QString msg) const;
+
 };
 
 #endif // VEDISOFTINTERNSHIP_APPENGINE_HPP
